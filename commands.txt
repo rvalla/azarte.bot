@@ -1,0 +1,4 @@
+start - Hay que mover el pie derecho. Starting with the right foot.
+attractor - Pedime un atractor extraño al azar. Ask for a random strange attractor.
+poem - Pedime un poema aleatorio. Ask for a random poem.
+help - No creo que necesites ayuda. I don't think you need help.
