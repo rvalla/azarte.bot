@@ -5,5 +5,6 @@
 	"poem": "Te dedico este <i>poema aleatorio</i>:",
 	"number": "Tiré un dado y salió: ",
 	"error": "Algo salió mal... ¡Qué vergüenza!",
-	"help": "Revisá la <i>lista de comandos</i>. Probar y equivocarse es la clave..."
+	"help": "Revisá la <i>lista de comandos</i>. Probar y equivocarse es la clave...",
+	"help2": "Podés acceder al <i>Read Me</i> <a href='https://gitlab.com/azarte/azarte_bot'>acá</a>."
 }

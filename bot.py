@@ -65,6 +65,7 @@ def random_sequence(update, context):
 def print_help(update, context):
 	id = update.effective_chat.id
 	context.bot.send_message(chat_id=id, text=messages["help"], parse_mode=ParseMode.HTML)
+	context.bot.send_message(chat_id=id, text=messages["help2"], parse_mode=ParseMode.HTML)
 
 def main():
 	updater = Updater(security["token"], request_kwargs={'read_timeout': 5, 'connect_timeout': 5})

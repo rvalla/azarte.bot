@@ -5,5 +5,6 @@
 	"poem": "Here is a <i>random poem</i> for you:",
 	"number": "I rolled a dice and got: ",
 	"error": "Something went wrong... I am so sorry!",
-	"help": "Check the <i>command list</i>. I am a trial and error fan..."
+	"help": "Check the <i>command list</i>. I am a trial and error fan...",
+	"help2": "Look for the <i>Read Me</i> <a href='https://gitlab.com/azarte/azarte_bot'>here</a>."
 }
