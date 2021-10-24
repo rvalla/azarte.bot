@@ -1,7 +1,9 @@
 {
 	"bot_name": "Azarte Bot",
-	"hello": "Hi, I am Azarte Bot. Be creative!",
+	"hello": "Hi, I am <b>Azarte Bot</b>. Be creative!",
 	"attractor": "Here you are!",
+	"poem": "Here is a <i>random poem</i> for you:",
+	"number": "I rolled a dice and got: ",
 	"error": "Something went wrong... I am so sorry!",
-	"help": "Check the command list. I am a trial and error fan..."
+	"help": "Check the <i>command list</i>. I am a trial and error fan..."
 }

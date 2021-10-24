@@ -14,6 +14,9 @@ class Text():
 		p = ""
 		lines = rd.choice([2,3,5,8,13,21])
 		metric = rd.choice([1,2,2,3,3,3,3,5])
+		r = rd.randint(0, len(self.input_tale_lines) - 1)
+		source = self.input_tale_lines[r].split(" ")
+		p += "<b>" + rd.choice(source) + "</b>" + "\n" + "\n"
 		for l in range(lines):
 			r = rd.randint(0, len(self.input_tale_lines) - 1)
 			source = self.input_tale_lines[r].split(" ")

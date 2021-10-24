@@ -1,7 +1,9 @@
 {
 	"bot_name": "Azarte Bot",
-	"hello": "Hola, soy Azarte Bot. ¡Azar y creatividad!",
+	"hello": "Hola, soy <b>Azarte Bot</b>. ¡Azar y creatividad!",
 	"attractor": "Acá tenés un atractor extraño...",
+	"poem": "Te dedico este <i>poema aleatorio</i>:",
+	"number": "Tiré un dado y salió: ",
 	"error": "Algo salió mal... ¡Qué vergüenza!",
-	"help": "Revisá la lista de comandos. Probar y equivocarse es la clave..."
+	"help": "Revisá la <i>lista de comandos</i>. Probar y equivocarse es la clave..."
 }

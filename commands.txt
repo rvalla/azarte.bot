@@ -1,4 +1,6 @@
 start - Hay que mover el pie derecho. Starting with the right foot.
 attractor - Pedime un atractor extraño al azar. Ask for a random strange attractor.
 poem - Pedime un poema aleatorio. Ask for a random poem.
+number - Tiro un dado de cualquier cantidad de caras. - I roll a dice with the desired number of faces.
+sequence - Tiro un dado varias veces. - I roll a dice several times.
 help - No creo que necesites ayuda. I don't think you need help.

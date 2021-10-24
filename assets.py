@@ -1,5 +1,4 @@
 import os
-import re
 import random as rd
 
 class Assets():
@@ -11,7 +10,8 @@ class Assets():
 		self.cleanFileList(self.attractor_list)
 
 	def get_attractor(self):
-		return self.img_path + "attractors/" + rd.choice(self.attractor_list)
+		attractor = open(self.img_path + "attractors/" + rd.choice(self.attractor_list), "rb")
+		return attractor
 
 	def cleanFileList(self, filelist):
 		f = 0
