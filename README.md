@@ -18,7 +18,7 @@ Here you can see the list of available commands. Some of them allow you to pass 
 - **/attractor**: returns a random strange attractor. They are so beautiful.  
 - **/poem**: returns a random poem built specially for you.  
 - **/number (f)**: returns a random number rolling a dice with *f* faces.  
-- **/sequence (n) (f)**: returns a random sequence of *n* numbers rolling a dice with *f* faces.  
+- **/sequence (f) (n)**: returns a random sequence of *n* numbers rolling a dice with *f* faces.  
 - **/help**: returns a link to bring you here.  
 
 Reach **azarte bot** [here](https://t.me/azarte_bot).
