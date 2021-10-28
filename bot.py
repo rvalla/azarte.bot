@@ -41,18 +41,19 @@ def poem(update, context):
 
 def random_number(update, context):
 	m = update.message.text.split(" ")
+	id = update.effective_chat.id
 	try:
 		faces = int(m[1])
 		r = mrd.diceroll(faces)
 	except:
 		r = mrd.diceroll(6)
 	m = msg.get_message("number", get_language(id)) + "<b>" + str(r) + "</b>"
-	id = update.effective_chat.id
 	logging.info("Sending a random dice to " + str(id))
 	context.bot.send_message(chat_id=id, text=m, parse_mode=ParseMode.HTML)
 
 def random_sequence(update, context):
 	m = update.message.text.split(" ")
+	id = update.effective_chat.id
 	try:
 		faces = int(m[1])
 		count = int(m[2])
@@ -60,20 +61,18 @@ def random_sequence(update, context):
 	except:
 		r = mrd.dicerolls(6, 5)
 	m = msg.get_message("number", get_language(id)) + "<b>" + str(r) + "</b>"
-	id = update.effective_chat.id
 	logging.info("Sending a random sequence to " + str(id))
 	context.bot.send_message(chat_id=id, text=m, parse_mode=ParseMode.HTML)
 
 def random_choice(update, context):
 	in_m = update.message.text.split(" ")
+	id = update.effective_chat.id
 	try:
 		r = mrd.diceroll(len(in_m)-1)
 		out_m = msg.get_message("choice", get_language(id)) + "<b>" + in_m[r] + "</b>"
-		id = update.effective_chat.id
 		logging.info("Sending a choice to " + str(id))
 		context.bot.send_message(chat_id=id, text=out_m, parse_mode=ParseMode.HTML)
 	except:
-		id = update.effective_chat.id
 		logging.info("Error while processing a choice for " + str(id))
 		context.bot.send_message(chat_id=id, text=msg.get_message("empty", get_language(id)), parse_mode=ParseMode.HTML)
 

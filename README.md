@@ -40,7 +40,6 @@ and *logging* (info, debugging or persistent) are mandatory:
 }
 
 ```
-
 ## standing upon the shoulders of giants
 
 This little project is possible thanks to a lot of work done by others in the *open-source* community. Particularly in
