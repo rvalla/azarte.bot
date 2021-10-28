@@ -3,4 +3,6 @@ attractor - Pedime un atractor extraño al azar.
 poem - Pedime un poema aleatorio.
 number - Tiro un dado de cualquier cantidad de caras.
 sequence - Tiro un dado varias veces.
-help - No creo que necesites ayuda.
+choice - Elijo una palabra de tu mensaje.
+language - Decidí qué idioma uso.
+help - No creo que necesites ayuda pero...

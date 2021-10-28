@@ -4,7 +4,12 @@
 	"attractor": "Acá tenés un atractor extraño...",
 	"poem": "Te dedico este <i>poema aleatorio</i>:",
 	"number": "Tiré un dado y salió: ",
+	"choice": "Me quedo con: ",
 	"error": "Algo salió mal... ¡Qué vergüenza!",
+	"language": "¿Qué idioma querés que use?",
+	"language2": "",
+	"language3": "¡Bien! Yo también prefiero el español.",
 	"help": "Revisá la <i>lista de comandos</i>. Probar y equivocarse es la clave...",
-	"help2": "Podés acceder al <i>Read Me</i> <a href='https://gitlab.com/azarte/azarte_bot'>acá</a>."
+	"help2": "Podés acceder al <i>Read Me</i> <a href='https://gitlab.com/azarte/azarte_bot'>acá</a>.",
+	"empty": "Triste el vacío que siento"
 }
