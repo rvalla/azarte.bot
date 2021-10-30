@@ -6,7 +6,7 @@ class Assets():
 
 	def __init__(self):
 		self.img_path = "assets/img/"
-		self.attractor_list = [f in for f in os.listdir(self.img_path + "attractors/") if not f.startswith(".")]
+		self.attractor_list = [f for f in os.listdir(self.img_path + "attractors/") if not f.startswith(".")]
 
 	def get_attractor(self):
 		attractor = open(self.img_path + "attractors/" + rd.choice(self.attractor_list), "rb")
