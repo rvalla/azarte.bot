@@ -34,6 +34,7 @@ and *logging* (info, debugging or persistent) are mandatory:
 	"bot_name": "Azarte Bot",
 	"date": "2021-10-23",
 	"username": "azarte_bot",
+	"admin_id": "A mistery",
 	"link": "https://t.me/azarte_bot",
 	"token": "I won't tell you my token",
 	"logging": "info"

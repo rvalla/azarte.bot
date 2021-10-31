@@ -8,7 +8,6 @@ class Text():
 		self.input_path = "assets/text/"
 		self.input_list_es = [f for f in os.listdir(self.input_path + "es/") if not f.startswith(".")]
 		self.input_list_en = [f for f in os.listdir(self.input_path + "en/") if not f.startswith(".")]
-		print(self.input_list_en)
 		self.input_tale_es = open(self.input_path + "es/" + rd.choice(self.input_list_es)).readlines()
 		self.input_tale_en = open(self.input_path + "en/" + rd.choice(self.input_list_en)).readlines()
 

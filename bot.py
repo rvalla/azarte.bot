@@ -113,6 +113,12 @@ def button_click(update, context):
 	if query.data.startswith("l"):
 		set_language(update, context, query.data)
 
+def error_notification(update, context):
+	id = update.effective_chat.id
+	m = "An error ocurred! While comunicating with chat " + str(id)
+	logging.info(m)
+	context.bot.send_message(chat_id=security["admin_id"], text=m, parse_mode=ParseMode.HTML)
+
 def main():
 	if security["logging"] == "persistent":
 		logging.basicConfig(filename="history.txt", filemode='a',level=logging.INFO,
@@ -123,6 +129,7 @@ def main():
 		logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 	updater = Updater(security["token"], request_kwargs={'read_timeout': 5, 'connect_timeout': 5})
 	dp = updater.dispatcher
+	dp.add_error_handler(error_notification)
 	dp.add_handler(CommandHandler("start", start))
 	dp.add_handler(CommandHandler("attractor", random_attractor))
 	dp.add_handler(CommandHandler("poem", poem))
@@ -132,7 +139,8 @@ def main():
 	dp.add_handler(CommandHandler("language", select_language))
 	dp.add_handler(CommandHandler("help", print_help))
 	dp.add_handler(CallbackQueryHandler(button_click))
-	updater.start_polling()
+	dp.bot.send_message(chat_id=security["admin_id"], text="The bot is online!", parse_mode=ParseMode.HTML)
+	updater.start_polling(drop_pending_updates=True)
 	updater.idle()
 
 if __name__ == "__main__":
