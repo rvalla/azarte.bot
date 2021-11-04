@@ -7,8 +7,8 @@
 	"choice": "I choose: ",
 	"error": "Something went wrong... I am so sorry!",
 	"language": "Please, select your prefered language.",
-	"language2": "Note that this bot does not store any persistent data from you. If the bot is restarted it will be forget your preference. In that case, be patient and send <b>/language</b> again.",
-	"language3": "I will try speak en english now...",
+	"language2": "Note that I do not store any persistent data from you. If somebody restarts me I will forget your preference. In that case, be patient and send me <b>/language</b> again.",
+	"language3": "I will try to speak en english now...",
 	"help": "Check the <i>command list</i>. I am a trial and error fan...",
 	"help2": "Look for the <i>Read Me</i> <a href='https://gitlab.com/azarte/azarte_bot'>here</a>.",
 	"empty": "I feel empty..."
