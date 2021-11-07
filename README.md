@@ -16,7 +16,7 @@ Here you can see the list of available commands. Some of them allow you to pass 
 
 - **/start**: returns simply a gretting.  
 - **/attractor**: returns a random strange attractor. They are so beautiful.  
-- **/poem**: returns a random poem built specially for you.  
+- **/text**: starts the textual alternatives.  
 - **/number (f)**: returns a random number rolling a dice with *f* faces.  
 - **/sequence (f) (n)**: returns a random sequence of *n* numbers rolling a dice with *f* faces.  
 - **/choice a b c**: returns a random word from your message.
@@ -25,9 +25,9 @@ Here you can see the list of available commands. Some of them allow you to pass 
 
 ## running the code
 
-Note that you will need a *security.json* file on root which includes the bot's token to run this software.
-I suggest the following fieldsvalthough currently only *token* (provided by [@BotFather](https://t.me/BotFather)
-and *logging* (info, debugging or persistent) are mandatory:
+Note that you will need a *config.json* file on root which includes the bot's mandatory token to run this software.
+Currently *token* (provided by [@BotFather](https://t.me/BotFather) and *logging* (info, debugging or persistent)
+are needed:
 
 ```
 {
@@ -37,7 +37,7 @@ and *logging* (info, debugging or persistent) are mandatory:
 	"admin_id": "A mistery",
 	"link": "https://t.me/azarte_bot",
 	"token": "I won't tell you my token",
-	"logging": "info"
+	"logging": "info",
 }
 
 ```
