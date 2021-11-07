@@ -6,10 +6,18 @@ class Text():
 
 	def __init__(self):
 		self.input_path = "assets/text/"
-		self.input_list_es = [f for f in os.listdir(self.input_path + "es/") if not f.startswith(".")]
-		self.input_list_en = [f for f in os.listdir(self.input_path + "en/") if not f.startswith(".")]
-		self.input_tale_es = open(self.input_path + "es/" + rd.choice(self.input_list_es)).readlines()
-		self.input_tale_en = open(self.input_path + "en/" + rd.choice(self.input_list_en)).readlines()
+		self.input_list_es = [f for f in os.listdir(self.input_path + "es/random/") if not f.startswith(".")]
+		self.input_list_en = [f for f in os.listdir(self.input_path + "en/random/") if not f.startswith(".")]
+		self.input_tale_es = open(self.input_path + "es/random/" + rd.choice(self.input_list_es)).readlines()
+		self.input_tale_en = open(self.input_path + "en/random/" + rd.choice(self.input_list_en)).readlines()
+		self.fiction_dict_es = open(self.input_path + "es/diccionario.csv").readlines()
+		self.fiction_dict_en = open(self.input_path + "en/dictionary.csv").readlines()
+		self.microtales_es = open(self.input_path + "es/microrrelatos.txt").readlines()
+		self.microtales_en = open(self.input_path + "en/microtales.txt").readlines()
+
+	def update(self):
+		self.input_tale_es = open(self.input_path + "es/random/" + rd.choice(self.input_list_es)).readlines()
+		self.input_tale_en = open(self.input_path + "en/random/" + rd.choice(self.input_list_en)).readlines()
 
 	def get_poem(self, l):
 		p = ""
@@ -44,3 +52,60 @@ class Text():
 			source = self.input_tale_en[r].split(" ")
 		title = "<b>" + rd.choice(source) + "</b>" + "\n" + "\n"
 		return title
+
+	def get_abstract(self, l):
+		abstract = ""
+		if l == 0:
+			abstract = self.build_abstract(self.input_tale_es)
+		elif l == 1:
+			abstract = self.build_abstract(self.input_tale_en)
+		return abstract
+
+	def build_abstract(self, source):
+		count = len(source)
+		r = rd.randint(0,count)
+		text = ""
+		for i in range(6):
+			text += source[(r+i)%count]
+		text = " ".join(text.splitlines())
+		text = " ".join(text.split("."))
+		words = text.split(" ")
+		count = len(words)
+		r = rd.randint(5,20)
+		abstract = ""
+		while r < count - 2:
+			for i in range(3):
+				abstract += " " + words[r+i]
+			r += rd.randint(5,20)
+		abstract += "."
+		return abstract[1:].capitalize()
+
+	def get_definition(self, l):
+		d = ""
+		if l == 0:
+			d = rd.choice(self.fiction_dict_es)
+		elif l == 1:
+			d = rd.choice(self.fiction_dict_en)
+		return self.format_definition(d)
+
+	def format_definition(self, s):
+		a = s.split(";")
+		d = "<b>" + a[0] + "</b> "
+		d += "<i>(" + a[1] + ")</i>: "
+		d += a[2]
+		return d
+
+	def get_microtale(self, l):
+		mt = "<i>"
+		if l == 0:
+			mt += rd.choice(self.microtales_es)
+		elif l == 1:
+			mt +=  rd.choice(self.microtales_en)
+		mt += "</i>"
+		return mt
+
+	def format_sequence(self, s):
+		f = ""
+		for v in s:
+			f += str(v) + " "
+		return f
