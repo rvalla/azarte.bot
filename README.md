@@ -14,8 +14,8 @@ some tests. Stay tuned!
 
 Here you can see the list of available commands. Some of them allow you to pass parameters.
 
-- **/start**: returns simply a gretting.  
-- **/attractor**: returns a random strange attractor. They are so beautiful.  
+- **/start**: returns simply a greeting.  
+- **/color**: starts the visual alternatives.
 - **/text**: starts the textual alternatives.  
 - **/number (f)**: returns a random number rolling a dice with *f* faces.  
 - **/sequence (f) (n)**: returns a random sequence of *n* numbers rolling a dice with *f* faces.  

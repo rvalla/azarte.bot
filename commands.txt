@@ -1,6 +1,6 @@
 start - Primero te saludo.
-attractor - Pedime un atractor extraño al azar.
-poem - Pedime un poema aleatorio.
+color - Lo que puedo ofrecer visualmente.
+text - Lo que puedo ofrecer textualmente.
 number - Tiro un dado de cualquier cantidad de caras.
 sequence - Tiro un dado varias veces.
 choice - Elijo una palabra de tu mensaje.
