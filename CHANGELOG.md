@@ -2,6 +2,31 @@
 
 # azarte: telegram bot changelog
 
+## 2021-11-11: v0.3 beta
+
+The **bot** has a clear structure now. Both **Image()** and **Sound()** classes were added to create
+objects in the moment. The user can select between the different options in each category using an
+*InlineKeyboard* now, so I decided to make some changes in the *bot commands*.
+
+The changes in the **bot** commands are:
+
+- **/poem** command was removed.
+- **/attractor** command was removed.
+- **/color**: the new command to access the different visual alternatives.
+- **/text**: the new command to access the different textual alternatives.  
+
+The **bot** has new features since this version:
+
+- **abstract**: to ask for a random abstract from a text.
+- **microtale**: simply sends a microtale from a database.
+- **definition**: a *fictional definition* of a word.
+- **lines**: a drawing created in the moment based on two random walks.
+- **escape**: a drawing based on a series of lines which escape from the canvas.
+- **clock**: a minimalistic drawing base on current time (UTC-3).
+- **distribution**: a common histogram but with cool colors.
+- **surprise**: the bot sends a random selected photo from its database.
+
+
 ## 2021-10-28: v0.2 alpha
 
 Now there is a new **Messages()** class to control the text content of bot's messages. I added a field
