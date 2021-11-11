@@ -63,21 +63,22 @@ class Text():
 
 	def build_abstract(self, source):
 		count = len(source)
-		r = rd.randint(0,count)
-		text = ""
-		for i in range(6):
+		r = rd.randint(1,count-1)
+		text = source[0]
+		for i in range(5):
 			text += source[(r+i)%count]
+		text += source[count-1]
 		text = " ".join(text.splitlines())
-		text = " ".join(text.split("."))
+		text = "".join(text.split("."))
 		words = text.split(" ")
 		count = len(words)
 		r = rd.randint(5,20)
-		abstract = ""
-		while r < count - 2:
+		abstract = " " + words[0] + " " + words [1] + " " + words[2]
+		while r < count - 3:
 			for i in range(3):
 				abstract += " " + words[r+i]
 			r += rd.randint(5,20)
-		abstract += "."
+		abstract += " " + words[count-1] + "."
 		return abstract[1:].capitalize()
 
 	def get_definition(self, l):
