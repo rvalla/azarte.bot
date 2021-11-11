@@ -9,7 +9,6 @@ from image import Image
 from myrandom import MyRandom
 
 config = js.load(open("config.json")) #The configuration .json file (token included)
-#sch = sched.scheduler(time.time, time.sleep) #Scheduler to update creator classes periodicaly...
 msg = Messages() #The class which knows what to say...
 ass = Assets() #The class to access the different persistent assets...
 txt = Text() #The class which create text alternatives...
@@ -28,7 +27,6 @@ def update_sources():
 	logging.info("Updating random variables in creation classes...")
 	txt.update()
 	img.update()
-	#sch.enter(2,2,update_sources)
 
 #Starting image alternatives...
 def image(update, context):
@@ -66,15 +64,10 @@ def sound(update, context):
 	logging.info(str(id) + " enter sound alternatives menu...")
 	b = []
 	if get_language(id) == 1:
-		b = ["Sorprise"]#, "Escape", "Clock", "Distribution", "Attractor", "Mistery"]
+		b = ["Sorprise"]
 	else:
-		b = ["Sorpresa"]#, "Escape", "Reloj", "Distribución", "Atractor", "Misterio"]
-	keyboard = [[InlineKeyboardButton(text=b[0], callback_data="s_0")]]#,
-				#InlineKeyboardButton(text=b[1], callback_data="i_1")],
-				#[InlineKeyboardButton(text=b[2], callback_data="i_2"),
-				#InlineKeyboardButton(text=b[3], callback_data="i_3")],
-				#[InlineKeyboardButton(text=b[4], callback_data="i_4"),
-				#InlineKeyboardButton(text=b[5], callback_data="i_5")]]
+		b = ["Sorpresa"]
+	keyboard = [[InlineKeyboardButton(text=b[0], callback_data="s_0")]]
 	reply = InlineKeyboardMarkup(keyboard)
 	context.bot.send_message(chat_id=id, text=msg.get_message("sound", get_language(id)), reply_markup=reply, parse_mode=ParseMode.HTML)
 
@@ -199,8 +192,8 @@ def decide_image(update, context, selection):
 		image_request(update, context, img.draw_escape(), "img_escape", "escape image")
 	elif selection == 2:
 		image_request(update, context, img.draw_clock(), "img_clock", "clock image")
-	#elif selection == 3:
-	#	print("ups")
+	elif selection == 3:
+		image_request(update, context, img.draw_distribution(), "img_distribution", "distribution image")
 	elif selection == 4:
 		image_request(update, context, ass.get_attractor(), "img_attractor", "attractor")
 	elif selection == 5:
@@ -249,7 +242,7 @@ def main():
 		logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 	updater = Updater(config["token"], request_kwargs={'read_timeout': 5, 'connect_timeout': 5})
 	dp = updater.dispatcher
-	#dp.add_error_handler(error_notification)
+	dp.add_error_handler(error_notification)
 	dp.add_handler(CommandHandler("start", start))
 	dp.add_handler(CommandHandler("color", image))
 	dp.add_handler(CommandHandler("text", text))

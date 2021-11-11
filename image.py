@@ -10,20 +10,20 @@ class Image():
 
 	def __init__(self):
 		self.background = (210,210,192)
-		self.w = 1080
-		self.h = 1920
+		self.w, self.h = self.get_image_size()
 		self.c = (self.w/2, self.h/2)
 		self.lw = 3
 		self.scale = rd.randint(5,12)
 		self.angles = self.get_angles(rd.randint(3,16))
-		self.sizes = self.get_sizes(len(self.angles))
+		self.sizes = self.get_escape_sizes(len(self.angles))
 		self.mask_path = "assets/img/masks/"
 		self.input_mask_list = [f for f in os.listdir(self.mask_path) if not f.startswith(".")]
 
 	def update(self):
+		self.w, self.h = self.get_image_size()
 		self.scale = rd.randint(5,20)
 		self.angles = self.get_angles(rd.randint(3,16))
-		self.sizes = self.get_sizes(len(self.angles))
+		self.sizes = self.get_escape_sizes(len(self.angles))
 
 	def draw_escape(self):
 		i = im.new("RGB",(self.w, self.h),self.background)
@@ -56,9 +56,9 @@ class Image():
 		op3 = (self.c[0] - math.cos(s) * cs[0] * 4, self.c[1] - math.sin(s) * cs[1] * 4)
 		color = self.get_time_color()
 		d.polygon([op1,op2,op3], fill=color, outline=None)
-		self.draw_circle(d, (170,30,30), p1, cs[0]*1.66)
-		self.draw_circle(d, (75,150,75), p2, cs[0]*1.33)
-		self.draw_circle(d, (35,70,180), p3, cs[0])
+		self.draw_circle(d, self.move_color((170,30,30),5), p1, cs[0]*1.66)
+		self.draw_circle(d, self.move_color((75,150,75),5), p2, cs[0]*1.33)
+		self.draw_circle(d, self.move_color((35,70,180),5), p3, cs[0])
 		return self.create_image(i)
 
 	def draw_lines(self):
@@ -68,7 +68,7 @@ class Image():
 		p1 = (self.w/2,self.h/5)
 		p2 = (self.w/2,self.h/5*4)
 		margin = self.w / 10
-		for r in range(3000):
+		for r in range(2500):
 			np1 = self.get_random_motion(p1)
 			np2 = self.get_random_motion(p2)
 			if self.is_point_in(np1, margin) and self.is_point_in(np2, margin):
@@ -77,6 +77,38 @@ class Image():
 				p2 = np2
 				c = self.move_color(c,1)
 		return self.create_image(i)
+
+	def draw_distribution(self):
+		i = im.new("RGB",(self.w, self.h),self.background)
+		d = idraw.Draw(i)
+		c = self.get_time_color()
+		margin = self.w / 50
+		steps = 21
+		data = self.get_distribution(steps)
+		data_max = max(data) * 1.5
+		m = (self.w-margin) / steps / 3
+		w = m * 2
+		color = self.get_time_color()
+		for b in range(steps):
+			a = (m + m * b + w * b, m)
+			b = (a[0] + w, (self.h * data[b] / data_max) + m)
+			self.draw_rectangle(d, self.invert_color(color), a, b)
+			a = (a[0], self.h - m)
+			b = (b[0], b[1] + m)
+			self.draw_rectangle(d, color, a, b)
+			color = self.move_color(color, 5)
+		return self.create_image(i)
+
+	def get_distribution(self, steps):
+		data = [1 for i in range(steps)]
+		type = rd.choice([0,1])
+		for v in range(100):
+			if type == 0:
+				data[rd.randint(0,len(data)-1)] += 1
+			else:
+				r = (rd.randint(0,len(data)-1) + rd.randint(0,len(data)-1)) // 2
+				data[r] += 1
+		return data
 
 	def get_random_motion(self, last_point):
 		x = rd.randint(-30,30)
@@ -110,6 +142,9 @@ class Image():
 		b = (c[0] + d/2, c[1] + d/2)
 		draw.ellipse([a,b], fill=color, outline=None)
 
+	def draw_rectangle(self, draw, color, a, b):
+		draw.rectangle([a,b], fill=color, outline=None)
+
 	def get_time_color(self):
 		t = tm.localtime()
 		r = t.tm_sec * 2
@@ -123,6 +158,13 @@ class Image():
 		b = rd.randint(-motion,motion)
 		return ((color[0]+r)%255,(color[1]+g)%255,(color[2]+b)%255)
 
+	def invert_color(self, color):
+		return (255-color[0], 255-color[1], 255-color[2])
+
+	def get_image_size(self):
+		size = rd.choice([(1080,1920),(1080,1080),(1920,1080),(1920,1440),(1440,1920)])
+		return size[0], size[1]
+
 	def get_angles(self, count):
 		ang = []
 		v = 2 * math.pi / count
@@ -130,7 +172,7 @@ class Image():
 			ang.append(a * v)
 		return ang
 
-	def get_sizes(self, count):
+	def get_escape_sizes(self, count):
 		aux = [rd.randint(1,6) for r in range(count)]
 		aux.sort()
 		offset = rd.randint(0,count)
