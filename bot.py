@@ -1,6 +1,6 @@
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
-import traceback, logging, sched, time
+import traceback, logging
 import json as js
 from messages import Messages
 from assets import Assets
@@ -15,6 +15,8 @@ txt = Text() #The class which create text alternatives...
 img = Image() #The class which create visual alternatives...
 mrd = MyRandom() #A class with some custom random functions...
 en_users = set() #In this set the bot store ids from users who prefer to speak in English
+requests_counter = [0,0,0] #Counting the number of requests by category (image, sound, text)
+update_cycle = 3 #Number of requests before updating configuration...
 
 #Starting the chat with a new user...
 def start(update, context):
@@ -105,6 +107,7 @@ def text_request(update, context, data, id, l, msg_tag, log_tag):
 	context.bot.send_message(chat_id=id, text=msg.get_message(msg_tag, l), parse_mode=ParseMode.HTML)
 	context.bot.send_message(chat_id=id, text=data, parse_mode=ParseMode.HTML)
 
+#Sending a random number to the user...
 def random_number(update, context):
 	m = update.message.text.split(" ")
 	id = update.effective_chat.id
@@ -117,6 +120,7 @@ def random_number(update, context):
 	logging.info("Sending a random dice to " + str(id))
 	context.bot.send_message(chat_id=id, text=m, parse_mode=ParseMode.HTML)
 
+#Sending a random sequence to the user...
 def random_sequence(update, context):
 	m = update.message.text.split(" ")
 	id = update.effective_chat.id
@@ -186,6 +190,7 @@ def button_click(update, context):
 
 #Triggering requested image functions...
 def decide_image(update, context, selection):
+	increase_request(0, img)
 	if selection == 0:
 		image_request(update, context, img.draw_lines(), "img_lines", "lines image")
 	elif selection == 1:
@@ -201,6 +206,7 @@ def decide_image(update, context, selection):
 
 #Triggering requested sound functions...
 def decide_sound(update, context, selection):
+	increase_request(1, img)
 	if selection == 0:
 		sound_request(update, context, ass.get_sound(), "sound_surprise", "random sound")
 
@@ -208,6 +214,7 @@ def decide_sound(update, context, selection):
 def decide_text(update, context, selection):
 	id = update.effective_chat.id
 	l = get_language(id)
+	increase_request(2, txt)
 	if selection == 0:
 		text_request(update, context, txt.get_poem(l), id, l, "txt_poem", "random poem")
 	elif selection == 1:
@@ -216,6 +223,15 @@ def decide_text(update, context, selection):
 		text_request(update, context, txt.get_microtale(l), id, l, "txt_microtale", "microtale")
 	elif selection == 3:
 		text_request(update, context, txt.get_definition(l), id, l, "txt_definition", "fictional definition")
+
+#Deciding when to update random variables configuration...
+def increase_request(c, object):
+	global requests_counter
+	requests_counter[c] += 1
+	if requests_counter[c] > update_cycle:
+		requests_counter[c] = 0
+		object.update()
+		logging.info("Updating class: " + str(c))
 
 #Sending a message to bot admin when an error occur...
 def error_notification(update, context):
