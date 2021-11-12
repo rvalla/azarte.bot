@@ -101,7 +101,7 @@ class Image():
 			b = (b[0], b[1] + m)
 			self.draw_rectangle(d, color, a, b)
 			color = self.move_color(color, 5)
-		return i#self.create_image(i)
+		return self.create_image(i)
 
 	#Creating a random data list to draw a distribution...
 	def get_distribution(self, steps):
