@@ -21,19 +21,13 @@ update_cycle = 3 #Number of requests before updating configuration...
 #Starting the chat with a new user...
 def start(update, context):
 	id = update.effective_chat.id
-	logging.info(str(id) + " started the bot...")
+	logging.info(hide_id(id) + " started the bot...")
 	context.bot.send_message(chat_id=id, text=msg.get_message("hello", get_language(id)), parse_mode=ParseMode.HTML)
-
-#A function to update random variables in creation classes...
-def update_sources():
-	logging.info("Updating random variables in creation classes...")
-	txt.update()
-	img.update()
 
 #Starting image alternatives...
 def image(update, context):
 	id = update.effective_chat.id
-	logging.info(str(id) + " enter image alternatives menu...")
+	logging.info(hide_id(id) + " enter image alternatives menu...")
 	b = []
 	if get_language(id) == 1:
 		b = ["Lines", "Escape", "Clock", "Distribution", "Attractor", "Sorprise"]
@@ -55,7 +49,7 @@ def image_request(update, context, data, msg_tag, log_tag):
 	try:
 		context.bot.send_message(chat_id=id, text=msg.get_message(msg_tag, get_language(id)), parse_mode=ParseMode.HTML)
 		context.bot.send_photo(chat_id=id, photo=data)
-		logging.info("The " + log_tag + " attractor was sent to " + str(id))
+		logging.info("The " + log_tag + " was sent to " + hide_id(id))
 	except:
 		logging.info("Network error when uploading!")
 		context.bot.send_message(chat_id=id, text=msg.get_message("error", get_language(id)), parse_mode=ParseMode.HTML)
@@ -63,7 +57,7 @@ def image_request(update, context, data, msg_tag, log_tag):
 #Starting sound alternatives...
 def sound(update, context):
 	id = update.effective_chat.id
-	logging.info(str(id) + " enter sound alternatives menu...")
+	logging.info(hide_id(id) + " enter sound alternatives menu...")
 	b = []
 	if get_language(id) == 1:
 		b = ["Sorprise"]
@@ -80,7 +74,7 @@ def sound_request(update, context, data, msg_tag, log_tag):
 	try:
 		context.bot.send_message(chat_id=id, text=msg.get_message(msg_tag, get_language(id)), parse_mode=ParseMode.HTML)
 		context.bot.send_voice(chat_id=id, voice=data)
-		logging.info("The " + log_tag + " sound was sent to " + str(id))
+		logging.info("The " + log_tag + " sound was sent to " + hide_id(id))
 	except:
 		logging.info("Network error when uploading!")
 		context.bot.send_message(chat_id=id, text=msg.get_message("error", get_language(id)), parse_mode=ParseMode.HTML)
@@ -88,7 +82,7 @@ def sound_request(update, context, data, msg_tag, log_tag):
 #Starting textual alternatives...
 def text(update, context):
 	id = update.effective_chat.id
-	logging.info(str(id) + " enter text tricks menu...")
+	logging.info(hide_id(id) + " enter text alternatives menu...")
 	b = []
 	if get_language(id) == 1:
 		b = ["Poem", "Abstract", "Microtale", "Definition"]
@@ -103,7 +97,7 @@ def text(update, context):
 
 #The function to deliver the requested text to the user...
 def text_request(update, context, data, id, l, msg_tag, log_tag):
-	logging.info("Sending a " + log_tag + " to " + str(id))
+	logging.info("Sending a " + log_tag + " to " + hide_id(id))
 	context.bot.send_message(chat_id=id, text=msg.get_message(msg_tag, l), parse_mode=ParseMode.HTML)
 	context.bot.send_message(chat_id=id, text=data, parse_mode=ParseMode.HTML)
 
@@ -117,7 +111,7 @@ def random_number(update, context):
 	except:
 		r = mrd.diceroll(6)
 	m = msg.get_message("number", get_language(id)) + "<b>" + str(r) + "</b>"
-	logging.info("Sending a random dice to " + str(id))
+	logging.info("Sending a random dice to " + hide_id(id))
 	context.bot.send_message(chat_id=id, text=m, parse_mode=ParseMode.HTML)
 
 #Sending a random sequence to the user...
@@ -131,7 +125,7 @@ def random_sequence(update, context):
 	except:
 		r = mrd.dicerolls(6, 5)
 	m = msg.get_message("number", get_language(id)) + "<b>" + txt.format_sequence(r) + "</b>"
-	logging.info("Sending a random sequence to " + str(id))
+	logging.info("Sending a random sequence to " + hide_id(id))
 	context.bot.send_message(chat_id=id, text=m, parse_mode=ParseMode.HTML)
 
 #Selecting a word from the message for the user...
@@ -141,23 +135,23 @@ def random_choice(update, context):
 	try:
 		r = mrd.diceroll(len(in_m)-1)
 		out_m = msg.get_message("choice", get_language(id)) + "<b>" + in_m[r] + "</b>"
-		logging.info("Sending a choice to " + str(id))
+		logging.info("Sending a choice to " + hide_id(id))
 		context.bot.send_message(chat_id=id, text=out_m, parse_mode=ParseMode.HTML)
 	except:
-		logging.info("Error while processing a choice for " + str(id))
+		logging.info("Error while processing a choice for " + hide_id(id))
 		context.bot.send_message(chat_id=id, text=msg.get_message("empty", get_language(id)), parse_mode=ParseMode.HTML)
 
 #Triggering /help command...
 def print_help(update, context):
 	id = update.effective_chat.id
-	logging.info(str(id) + " asked for help...")
+	logging.info(hide_id(id) + " asked for help...")
 	context.bot.send_message(chat_id=id, text=msg.get_message("help", get_language(id)), parse_mode=ParseMode.HTML)
 	context.bot.send_message(chat_id=id, text=msg.get_message("help2", get_language(id)), parse_mode=ParseMode.HTML)
 
 #Allowing the user to chose the language (español - english)...
 def select_language(update, context):
 	id = update.effective_chat.id
-	logging.info(str(id) + " will set language...")
+	logging.info(hide_id(id) + " will set language...")
 	keyboard = [[InlineKeyboardButton(text="Español", callback_data="l_0"),
 				InlineKeyboardButton(text="English", callback_data="l_1")]]
 	reply = InlineKeyboardMarkup(keyboard)
@@ -166,11 +160,11 @@ def select_language(update, context):
 def set_language(update, context, selection):
 	id = update.effective_chat.id
 	if selection == 1:
-		logging.info("English is the language selected by " + str(id))
+		logging.info("English is the language selected by " + hide_id(id))
 		en_users.add(id)
 		context.bot.send_message(chat_id=id, text=msg.get_message("language2", get_language(id)), parse_mode=ParseMode.HTML)
 	else:
-		logging.info("Spanish is the language selected by " + str(id))
+		logging.info("Spanish is the language selected by " + hide_id(id))
 		en_users.discard(id)
 	context.bot.send_message(chat_id=id, text=msg.get_message("language3", get_language(id)), parse_mode=ParseMode.HTML)
 
@@ -236,7 +230,7 @@ def increase_request(c, object):
 #Sending a message to bot admin when an error occur...
 def error_notification(update, context):
 	id = update.effective_chat.id
-	m = "An error ocurred! While comunicating with chat " + str(id)
+	m = "An error ocurred! While comunicating with chat " + hide_id(id)
 	logging.info(m)
 	context.bot.send_message(chat_id=config["admin_id"], text=m, parse_mode=ParseMode.HTML)
 
@@ -246,6 +240,12 @@ def get_language(id):
 		return 1
 	else:
 		return 0
+
+#Hiding the first numbers of a chat id for the log...
+def hide_id(id):
+	s = str(id)
+	print(id)
+	return "****" + s[len(s)-4:]
 
 #Configuring logging and getting ready to work...
 def main():

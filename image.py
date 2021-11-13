@@ -22,6 +22,7 @@ class Image():
 	#Update method to change random variables configuration
 	def update(self):
 		self.w, self.h = self.get_image_size()
+		self.c = (self.w/2, self.h/2)
 		self.scale = rd.randint(8,12)
 		self.angles = self.get_angles(rd.randint(3,12))
 		self.sizes = self.get_escape_sizes(len(self.angles))

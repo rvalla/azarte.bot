@@ -2,6 +2,10 @@
 
 # azarte: telegram bot changelog
 
+## 2021-11-13: v0.3.1 beta
+
+Fixing minor bugs.
+
 ## 2021-11-11: v0.3 beta
 
 The **bot** has a clear structure now. Both **Image()** and **Sound()** classes were added to create
