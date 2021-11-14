@@ -17,11 +17,13 @@
 	"txt_poem": "Here is a <i>random poem</i> for you:",
 	"number": "I rolled a dice and got: ",
 	"choice": "I choose: ",
+	"patience": "Be patient! I have to do some calculations...",
 	"error": "Something went wrong... I am so sorry!",
 	"language": "Please, select your prefered language.",
 	"language2": "Note that I don't store any persistent data from you. If somebody restarts me I will forget your preference. In that case, be patient and send me <b>/language</b> again.",
 	"language3": "I will try to speak in english now...",
 	"help": "Check the <i>command list</i>. I am a trial and error fan...",
 	"help2": "Look for the <i>Read Me</i> <a href='https://gitlab.com/azarte/azarte_bot'>here</a>.",
+	"wrong_message": "If you want to chat look for somebody who passes a Turing test. Send me commands!",
 	"empty": "I feel empty..."
 }

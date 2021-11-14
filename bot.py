@@ -1,4 +1,4 @@
-from telegram.ext import Updater, InlineQueryHandler, CommandHandler, CallbackQueryHandler
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, MessageHandler, Filters
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
 import traceback, logging
 import json as js
@@ -148,6 +148,12 @@ def print_help(update, context):
 	context.bot.send_message(chat_id=id, text=msg.get_message("help", get_language(id)), parse_mode=ParseMode.HTML)
 	context.bot.send_message(chat_id=id, text=msg.get_message("help2", get_language(id)), parse_mode=ParseMode.HTML)
 
+#Advicing user not to chat with a bot...
+def wrong_message(update, context):
+	id = update.effective_chat.id
+	logging.info(hide_id(id) + " intended to chat...")
+	context.bot.send_message(chat_id=id, text=msg.get_message("wrong_message", get_language(id)), parse_mode=ParseMode.HTML)
+
 #Allowing the user to chose the language (español - english)...
 def select_language(update, context):
 	id = update.effective_chat.id
@@ -184,6 +190,7 @@ def button_click(update, context):
 
 #Triggering requested image functions...
 def decide_image(update, context, selection):
+	context.bot.send_message(chat_id=id, text=msg.get_message("patience", l), parse_mode=ParseMode.HTML)
 	increase_request(0, img)
 	if selection == 0:
 		image_request(update, context, img.draw_lines(), "img_lines", "lines image")
@@ -200,6 +207,7 @@ def decide_image(update, context, selection):
 
 #Triggering requested sound functions...
 def decide_sound(update, context, selection):
+	context.bot.send_message(chat_id=id, text=msg.get_message("patience", l), parse_mode=ParseMode.HTML)
 	increase_request(1, img)
 	if selection == 0:
 		sound_request(update, context, ass.get_sound(), "sound_surprise", "random sound")
@@ -244,7 +252,6 @@ def get_language(id):
 #Hiding the first numbers of a chat id for the log...
 def hide_id(id):
 	s = str(id)
-	print(id)
 	return "****" + s[len(s)-4:]
 
 #Configuring logging and getting ready to work...
@@ -269,6 +276,7 @@ def main():
 	dp.add_handler(CommandHandler("language", select_language))
 	dp.add_handler(CommandHandler("help", print_help))
 	dp.add_handler(CallbackQueryHandler(button_click))
+	dp.add_handler(MessageHandler(Filters.text, wrong_message))
 	dp.bot.send_message(chat_id=config["admin_id"], text="The bot is online!", parse_mode=ParseMode.HTML)
 	updater.start_polling(drop_pending_updates=True)
 	updater.idle()
