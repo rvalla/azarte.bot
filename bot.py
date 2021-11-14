@@ -30,7 +30,7 @@ def image(update, context):
 	logging.info(hide_id(id) + " enter image alternatives menu...")
 	b = []
 	if get_language(id) == 1:
-		b = ["Lines", "Escape", "Clock", "Distribution", "Attractor", "Sorprise"]
+		b = ["Lines", "Escape", "Clock", "Distribution", "Attractor", "Surprise"]
 	else:
 		b = ["Líneas", "Escape", "Reloj", "Distribución", "Atractor", "Sorpresa"]
 	keyboard = [[InlineKeyboardButton(text=b[0], callback_data="i_0"),
@@ -43,11 +43,10 @@ def image(update, context):
 	context.bot.send_message(chat_id=id, text=msg.get_message("image", get_language(id)), reply_markup=reply, parse_mode=ParseMode.HTML)
 
 #The function to deliver the requested image to the user...
-def image_request(update, context, data, msg_tag, log_tag):
-	id = update.effective_chat.id
+def image_request(update, context, id, l, data, msg_tag, log_tag):
 	logging.info("Uploading " + log_tag + " to Telegram servers...")
 	try:
-		context.bot.send_message(chat_id=id, text=msg.get_message(msg_tag, get_language(id)), parse_mode=ParseMode.HTML)
+		context.bot.send_message(chat_id=id, text=msg.get_message(msg_tag, l), parse_mode=ParseMode.HTML)
 		context.bot.send_photo(chat_id=id, photo=data)
 		logging.info("The " + log_tag + " was sent to " + hide_id(id))
 	except:
@@ -60,7 +59,7 @@ def sound(update, context):
 	logging.info(hide_id(id) + " enter sound alternatives menu...")
 	b = []
 	if get_language(id) == 1:
-		b = ["Sorprise"]
+		b = ["Surprise"]
 	else:
 		b = ["Sorpresa"]
 	keyboard = [[InlineKeyboardButton(text=b[0], callback_data="s_0")]]
@@ -68,11 +67,10 @@ def sound(update, context):
 	context.bot.send_message(chat_id=id, text=msg.get_message("sound", get_language(id)), reply_markup=reply, parse_mode=ParseMode.HTML)
 
 #The function to deliver the requested sound to the user...
-def sound_request(update, context, data, msg_tag, log_tag):
-	id = update.effective_chat.id
+def sound_request(update, context, id, l, data, msg_tag, log_tag):
 	logging.info("Uploading "  + log_tag + " to Telegram servers...")
 	try:
-		context.bot.send_message(chat_id=id, text=msg.get_message(msg_tag, get_language(id)), parse_mode=ParseMode.HTML)
+		context.bot.send_message(chat_id=id, text=msg.get_message(msg_tag, l), parse_mode=ParseMode.HTML)
 		context.bot.send_voice(chat_id=id, voice=data)
 		logging.info("The " + log_tag + " sound was sent to " + hide_id(id))
 	except:
@@ -96,7 +94,7 @@ def text(update, context):
 	context.bot.send_message(chat_id=id, text=msg.get_message("text", get_language(id)), reply_markup=reply, parse_mode=ParseMode.HTML)
 
 #The function to deliver the requested text to the user...
-def text_request(update, context, data, id, l, msg_tag, log_tag):
+def text_request(update, context, id, l, data, msg_tag, log_tag):
 	logging.info("Sending a " + log_tag + " to " + hide_id(id))
 	context.bot.send_message(chat_id=id, text=msg.get_message(msg_tag, l), parse_mode=ParseMode.HTML)
 	context.bot.send_message(chat_id=id, text=data, parse_mode=ParseMode.HTML)
@@ -190,27 +188,31 @@ def button_click(update, context):
 
 #Triggering requested image functions...
 def decide_image(update, context, selection):
+	id = update.effective_chat.id
+	l = get_language(id)
 	context.bot.send_message(chat_id=id, text=msg.get_message("patience", l), parse_mode=ParseMode.HTML)
 	increase_request(0, img)
 	if selection == 0:
-		image_request(update, context, img.draw_lines(), "img_lines", "lines image")
+		image_request(update, context, id, l, img.draw_lines(), "img_lines", "lines image")
 	elif selection == 1:
-		image_request(update, context, img.draw_escape(), "img_escape", "escape image")
+		image_request(update, context, id, l, img.draw_escape(), "img_escape", "escape image")
 	elif selection == 2:
-		image_request(update, context, img.draw_clock(), "img_clock", "clock image")
+		image_request(update, context, id, l, img.draw_clock(), "img_clock", "clock image")
 	elif selection == 3:
-		image_request(update, context, img.draw_distribution(), "img_distribution", "distribution image")
+		image_request(update, context, id, l, img.draw_distribution(), "img_distribution", "distribution image")
 	elif selection == 4:
-		image_request(update, context, ass.get_attractor(), "img_attractor", "attractor")
+		image_request(update, context, id, l, ass.get_attractor(), "img_attractor", "attractor")
 	elif selection == 5:
-		image_request(update, context, ass.get_image_piece(), "img_surprise", "surprise image")
+		image_request(update, context, id, l, ass.get_image_piece(), "img_surprise", "surprise image")
 
 #Triggering requested sound functions...
 def decide_sound(update, context, selection):
+	id = update.effective_chat.id
+	l = get_language(id)
 	context.bot.send_message(chat_id=id, text=msg.get_message("patience", l), parse_mode=ParseMode.HTML)
 	increase_request(1, img)
 	if selection == 0:
-		sound_request(update, context, ass.get_sound(), "sound_surprise", "random sound")
+		sound_request(update, context, id, l, ass.get_sound(), "sound_surprise", "random sound")
 
 #Triggering requested text functions...
 def decide_text(update, context, selection):
@@ -218,13 +220,13 @@ def decide_text(update, context, selection):
 	l = get_language(id)
 	increase_request(2, txt)
 	if selection == 0:
-		text_request(update, context, txt.get_poem(l), id, l, "txt_poem", "random poem")
+		text_request(update, context, id, l, txt.get_poem(l), "txt_poem", "random poem")
 	elif selection == 1:
-		text_request(update, context, txt.get_abstract(l), id, l, "txt_abstract", "random abstract")
+		text_request(update, context, id, l, txt.get_abstract(l), "txt_abstract", "random abstract")
 	elif selection == 2:
-		text_request(update, context, txt.get_microtale(l), id, l, "txt_microtale", "microtale")
+		text_request(update, context, id, l, txt.get_microtale(l), "txt_microtale", "microtale")
 	elif selection == 3:
-		text_request(update, context, txt.get_definition(l), id, l, "txt_definition", "fictional definition")
+		text_request(update, context, id, l, txt.get_definition(l), "txt_definition", "fictional definition")
 
 #Deciding when to update random variables configuration...
 def increase_request(c, object):
