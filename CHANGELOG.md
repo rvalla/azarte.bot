@@ -2,9 +2,10 @@
 
 # azarte: telegram bot changelog
 
-## 2021-11-13: v0.3.1 beta
+## 2021-11-14: v0.3.1 beta
 
-Fixing minor bugs.
+Fixing minor and stupid bugs. The bot is running correctly now. Handling text messages outside any command,
+notifying the user when time is needed to build an answer.
 
 ## 2021-11-11: v0.3 beta
 
