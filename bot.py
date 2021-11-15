@@ -29,7 +29,8 @@ def image(update, context):
 	id = update.effective_chat.id
 	logging.info(hide_id(id) + " enter image alternatives menu...")
 	b = []
-	if get_language(id) == 1:
+	l = get_language(id)
+	if l == 1:
 		b = ["Lines", "Escape", "Clock", "Distribution", "Attractor", "Surprise"]
 	else:
 		b = ["Líneas", "Escape", "Reloj", "Distribución", "Atractor", "Sorpresa"]
@@ -40,13 +41,12 @@ def image(update, context):
 				[InlineKeyboardButton(text=b[4], callback_data="i_4"),
 				InlineKeyboardButton(text=b[5], callback_data="i_5")]]
 	reply = InlineKeyboardMarkup(keyboard)
-	context.bot.send_message(chat_id=id, text=msg.get_message("image", get_language(id)), reply_markup=reply, parse_mode=ParseMode.HTML)
+	context.bot.send_message(chat_id=id, text=msg.get_message("image", l), reply_markup=reply, parse_mode=ParseMode.HTML)
 
 #The function to deliver the requested image to the user...
-def image_request(update, context, id, l, data, msg_tag, log_tag):
+def image_request(update, context, id, data, log_tag):
 	logging.info("Uploading " + log_tag + " to Telegram servers...")
 	try:
-		context.bot.send_message(chat_id=id, text=msg.get_message(msg_tag, l), parse_mode=ParseMode.HTML)
 		context.bot.send_photo(chat_id=id, photo=data)
 		logging.info("The " + log_tag + " was sent to " + hide_id(id))
 	except:
@@ -58,19 +58,19 @@ def sound(update, context):
 	id = update.effective_chat.id
 	logging.info(hide_id(id) + " enter sound alternatives menu...")
 	b = []
-	if get_language(id) == 1:
+	l = get_language(id)
+	if l == 1:
 		b = ["Surprise"]
 	else:
 		b = ["Sorpresa"]
 	keyboard = [[InlineKeyboardButton(text=b[0], callback_data="s_0")]]
 	reply = InlineKeyboardMarkup(keyboard)
-	context.bot.send_message(chat_id=id, text=msg.get_message("sound", get_language(id)), reply_markup=reply, parse_mode=ParseMode.HTML)
+	context.bot.send_message(chat_id=id, text=msg.get_message("sound", l), reply_markup=reply, parse_mode=ParseMode.HTML)
 
 #The function to deliver the requested sound to the user...
-def sound_request(update, context, id, l, data, msg_tag, log_tag):
+def sound_request(update, context, id, data, log_tag):
 	logging.info("Uploading "  + log_tag + " to Telegram servers...")
 	try:
-		context.bot.send_message(chat_id=id, text=msg.get_message(msg_tag, l), parse_mode=ParseMode.HTML)
 		context.bot.send_voice(chat_id=id, voice=data)
 		logging.info("The " + log_tag + " sound was sent to " + hide_id(id))
 	except:
@@ -82,7 +82,8 @@ def text(update, context):
 	id = update.effective_chat.id
 	logging.info(hide_id(id) + " enter text alternatives menu...")
 	b = []
-	if get_language(id) == 1:
+	l = get_language(id)
+	if l == 1:
 		b = ["Poem", "Abstract", "Microtale", "Definition"]
 	else:
 		b = ["Poema", "Resumen", "Microrelato", "Definición"]
@@ -91,7 +92,7 @@ def text(update, context):
 				[InlineKeyboardButton(text=b[2], callback_data="t_2"),
 				InlineKeyboardButton(text=b[3], callback_data="t_3")]]
 	reply = InlineKeyboardMarkup(keyboard)
-	context.bot.send_message(chat_id=id, text=msg.get_message("text", get_language(id)), reply_markup=reply, parse_mode=ParseMode.HTML)
+	context.bot.send_message(chat_id=id, text=msg.get_message("text", l), reply_markup=reply, parse_mode=ParseMode.HTML)
 
 #The function to deliver the requested text to the user...
 def text_request(update, context, id, l, data, msg_tag, log_tag):
@@ -193,17 +194,23 @@ def decide_image(update, context, selection):
 	context.bot.send_message(chat_id=id, text=msg.get_message("patience", l), parse_mode=ParseMode.HTML)
 	increase_request(0, img)
 	if selection == 0:
-		image_request(update, context, id, l, img.draw_lines(), "img_lines", "lines image")
+		context.bot.send_message(chat_id=id, text=msg.get_message("img_lines", l), parse_mode=ParseMode.HTML)
+		image_request(update, context, id, img.draw_lines(), "lines image")
 	elif selection == 1:
-		image_request(update, context, id, l, img.draw_escape(), "img_escape", "escape image")
+		context.bot.send_message(chat_id=id, text=msg.get_message("img_escape", l), parse_mode=ParseMode.HTML)
+		image_request(update, context, id, img.draw_escape(), "escape image")
 	elif selection == 2:
-		image_request(update, context, id, l, img.draw_clock(), "img_clock", "clock image")
+		context.bot.send_message(chat_id=id, text=msg.get_message("img_clock", l), parse_mode=ParseMode.HTML)
+		image_request(update, context, id, img.draw_clock(), "clock image")
 	elif selection == 3:
-		image_request(update, context, id, l, img.draw_distribution(), "img_distribution", "distribution image")
+		context.bot.send_message(chat_id=id, text=msg.get_message("img_distribution", l), parse_mode=ParseMode.HTML)
+		image_request(update, context, id, img.draw_distribution(), "distribution image")
 	elif selection == 4:
-		image_request(update, context, id, l, ass.get_attractor(), "img_attractor", "attractor")
+		context.bot.send_message(chat_id=id, text=msg.get_message("img_attractor", l), parse_mode=ParseMode.HTML)
+		image_request(update, context, id, ass.get_attractor(), "attractor")
 	elif selection == 5:
-		image_request(update, context, id, l, ass.get_image_piece(), "img_surprise", "surprise image")
+		context.bot.send_message(chat_id=id, text=msg.get_message("img_surprise", l), parse_mode=ParseMode.HTML)
+		image_request(update, context, id, ass.get_image_piece(), "surprise image")
 
 #Triggering requested sound functions...
 def decide_sound(update, context, selection):
@@ -212,7 +219,8 @@ def decide_sound(update, context, selection):
 	context.bot.send_message(chat_id=id, text=msg.get_message("patience", l), parse_mode=ParseMode.HTML)
 	increase_request(1, img)
 	if selection == 0:
-		sound_request(update, context, id, l, ass.get_sound(), "sound_surprise", "random sound")
+		context.bot.send_message(chat_id=id, text=msg.get_message("sound_surprise", l), parse_mode=ParseMode.HTML)
+		sound_request(update, context, id, ass.get_sound(), "random sound")
 
 #Triggering requested text functions...
 def decide_text(update, context, selection):
