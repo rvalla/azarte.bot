@@ -289,7 +289,7 @@ def main():
 		logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 	updater = Updater(config["token"], request_kwargs={'read_timeout': 5, 'connect_timeout': 5})
 	dp = updater.dispatcher
-	#dp.add_error_handler(error_notification)
+	dp.add_error_handler(error_notification)
 	dp.add_handler(CommandHandler("start", start))
 	dp.add_handler(CommandHandler("color", image))
 	dp.add_handler(CommandHandler("text", text))
@@ -301,7 +301,7 @@ def main():
 	dp.add_handler(CommandHandler("help", print_help))
 	dp.add_handler(CallbackQueryHandler(button_click))
 	dp.add_handler(MessageHandler(Filters.text, wrong_message))
-	#dp.add_handler(MessageHandler(Filters.audio & ~Filters.command, print_voice_id))
+	#dp.add_handler(MessageHandler(Filters.audio & ~Filters.command, print_audio_id))
 	dp.bot.send_message(chat_id=config["admin_id"], text="The bot is online!", parse_mode=ParseMode.HTML)
 	updater.start_polling(drop_pending_updates=True)
 	updater.idle()
