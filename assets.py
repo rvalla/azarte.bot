@@ -5,20 +5,28 @@ class Assets():
 	"The class the bot use to access the assets..."
 
 	def __init__(self):
-		self.img_path = "assets/img/"
-		self.audio_path = "assets/audio/"
-		self.attractor_list = [f for f in os.listdir(self.img_path + "attractors/") if not f.startswith(".")]
-		self.img_pieces_list = [f for f in os.listdir(self.img_path + "pieces/") if not f.startswith(".")]
-		self.sounds_list = [f for f in os.listdir(self.audio_path + "random/") if not f.startswith(".")]
+		self.attractor_list, self.img_pieces_list, self.sounds_list = self.build_ids_lists("assets/online_resources_ids.csv")
 
 	def get_attractor(self):
-		attractor = open(self.img_path + "attractors/" + rd.choice(self.attractor_list), "rb")
-		return attractor
+		return rd.choice(self.attractor_list)
 
 	def get_image_piece(self):
-		image = open(self.img_path + "pieces/" + rd.choice(self.img_pieces_list), "rb")
-		return image
+		return rd.choice(self.img_pieces_list)
 
 	def get_sound(self):
-		sound = open(self.audio_path + "random/" + rd.choice(self.sounds_list), "rb")
-		return sound
+		return rd.choice(self.sounds_list)
+
+	def build_ids_lists(self, path):
+		lines = open(path).readlines()[1:]
+		attractors = []
+		img_pieces = []
+		sounds = []
+		for l in lines:
+			data = l.split(";")
+			if data[1] == "img_attractor":
+				attractors.append(data[0])
+			elif data[1] == "img_surprise":
+				img_pieces.append(data[0])
+			elif data[1] == "audio_surprise":
+				sounds.append(data[0])
+		return attractors, img_pieces, sounds

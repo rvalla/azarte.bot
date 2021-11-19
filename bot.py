@@ -44,8 +44,11 @@ def image(update, context):
 	context.bot.send_message(chat_id=id, text=msg.get_message("image", l), reply_markup=reply, parse_mode=ParseMode.HTML)
 
 #The function to deliver the requested image to the user...
-def image_request(update, context, id, data, log_tag):
-	logging.info("Uploading " + log_tag + " to Telegram servers...")
+def image_request(update, context, id, data, log_tag, uploading):
+	print("////////")
+	print(data)
+	if uploading:
+		logging.info("Uploading " + log_tag + " to Telegram servers...")
 	try:
 		context.bot.send_photo(chat_id=id, photo=data)
 		logging.info("The " + log_tag + " was sent to " + hide_id(id))
@@ -68,10 +71,11 @@ def sound(update, context):
 	context.bot.send_message(chat_id=id, text=msg.get_message("sound", l), reply_markup=reply, parse_mode=ParseMode.HTML)
 
 #The function to deliver the requested sound to the user...
-def sound_request(update, context, id, data, log_tag):
-	logging.info("Uploading "  + log_tag + " to Telegram servers...")
+def sound_request(update, context, id, data, log_tag, uploading):
+	if uploading:
+		logging.info("Uploading "  + log_tag + " to Telegram servers...")
 	try:
-		context.bot.send_voice(chat_id=id, voice=data)
+		context.bot.send_audio(chat_id=id, audio=data)
 		logging.info("The " + log_tag + " sound was sent to " + hide_id(id))
 	except:
 		logging.info("Network error when uploading!")
@@ -191,36 +195,38 @@ def button_click(update, context):
 def decide_image(update, context, selection):
 	id = update.effective_chat.id
 	l = get_language(id)
-	context.bot.send_message(chat_id=id, text=msg.get_message("patience", l), parse_mode=ParseMode.HTML)
 	increase_request(0, img)
 	if selection == 0:
+		context.bot.send_message(chat_id=id, text=msg.get_message("patience", l), parse_mode=ParseMode.HTML)
 		context.bot.send_message(chat_id=id, text=msg.get_message("img_lines", l), parse_mode=ParseMode.HTML)
-		image_request(update, context, id, img.draw_lines(), "lines image")
+		image_request(update, context, id, img.draw_lines(), "lines image", True)
 	elif selection == 1:
+		context.bot.send_message(chat_id=id, text=msg.get_message("patience", l), parse_mode=ParseMode.HTML)
 		context.bot.send_message(chat_id=id, text=msg.get_message("img_escape", l), parse_mode=ParseMode.HTML)
-		image_request(update, context, id, img.draw_escape(), "escape image")
+		image_request(update, context, id, img.draw_escape(), "escape image", True)
 	elif selection == 2:
+		context.bot.send_message(chat_id=id, text=msg.get_message("patience", l), parse_mode=ParseMode.HTML)
 		context.bot.send_message(chat_id=id, text=msg.get_message("img_clock", l), parse_mode=ParseMode.HTML)
-		image_request(update, context, id, img.draw_clock(), "clock image")
+		image_request(update, context, id, img.draw_clock(), "clock image", True)
 	elif selection == 3:
+		context.bot.send_message(chat_id=id, text=msg.get_message("patience", l), parse_mode=ParseMode.HTML)
 		context.bot.send_message(chat_id=id, text=msg.get_message("img_distribution", l), parse_mode=ParseMode.HTML)
-		image_request(update, context, id, img.draw_distribution(), "distribution image")
+		image_request(update, context, id, img.draw_distribution(), "distribution image", True)
 	elif selection == 4:
 		context.bot.send_message(chat_id=id, text=msg.get_message("img_attractor", l), parse_mode=ParseMode.HTML)
-		image_request(update, context, id, ass.get_attractor(), "attractor")
+		image_request(update, context, id, ass.get_attractor(), "attractor", False)
 	elif selection == 5:
 		context.bot.send_message(chat_id=id, text=msg.get_message("img_surprise", l), parse_mode=ParseMode.HTML)
-		image_request(update, context, id, ass.get_image_piece(), "surprise image")
+		image_request(update, context, id, ass.get_image_piece(), "surprise image", False)
 
 #Triggering requested sound functions...
 def decide_sound(update, context, selection):
 	id = update.effective_chat.id
 	l = get_language(id)
-	context.bot.send_message(chat_id=id, text=msg.get_message("patience", l), parse_mode=ParseMode.HTML)
 	increase_request(1, img)
 	if selection == 0:
 		context.bot.send_message(chat_id=id, text=msg.get_message("sound_surprise", l), parse_mode=ParseMode.HTML)
-		sound_request(update, context, id, ass.get_sound(), "random sound")
+		sound_request(update, context, id, ass.get_sound(), "random sound", False)
 
 #Triggering requested text functions...
 def decide_text(update, context, selection):
@@ -259,6 +265,14 @@ def get_language(id):
 	else:
 		return 0
 
+#Function to print file ids from audios...
+def print_audio_id(update, context):
+	print(update.message.audio["file_id"])
+
+#Function to print file ids from photos...
+def print_photo_id(update, context):
+	print(update.message.photo[0]["file_id"])
+
 #Hiding the first numbers of a chat id for the log...
 def hide_id(id):
 	s = str(id)
@@ -275,7 +289,7 @@ def main():
 		logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 	updater = Updater(config["token"], request_kwargs={'read_timeout': 5, 'connect_timeout': 5})
 	dp = updater.dispatcher
-	dp.add_error_handler(error_notification)
+	#dp.add_error_handler(error_notification)
 	dp.add_handler(CommandHandler("start", start))
 	dp.add_handler(CommandHandler("color", image))
 	dp.add_handler(CommandHandler("text", text))
@@ -287,6 +301,7 @@ def main():
 	dp.add_handler(CommandHandler("help", print_help))
 	dp.add_handler(CallbackQueryHandler(button_click))
 	dp.add_handler(MessageHandler(Filters.text, wrong_message))
+	#dp.add_handler(MessageHandler(Filters.audio & ~Filters.command, print_voice_id))
 	dp.bot.send_message(chat_id=config["admin_id"], text="The bot is online!", parse_mode=ParseMode.HTML)
 	updater.start_polling(drop_pending_updates=True)
 	updater.idle()
