@@ -45,8 +45,6 @@ def image(update, context):
 
 #The function to deliver the requested image to the user...
 def image_request(update, context, id, data, log_tag, uploading):
-	print("////////")
-	print(data)
 	if uploading:
 		logging.info("Uploading " + log_tag + " to Telegram servers...")
 	try:
@@ -303,8 +301,13 @@ def main():
 	dp.add_handler(MessageHandler(Filters.text, wrong_message))
 	#dp.add_handler(MessageHandler(Filters.audio & ~Filters.command, print_audio_id))
 	dp.bot.send_message(chat_id=config["admin_id"], text="The bot is online!", parse_mode=ParseMode.HTML)
-	updater.start_polling(drop_pending_updates=True)
-	updater.idle()
+	if config["webhook"]:
+		wh_url = "https://" + config["public_ip"] + ":" + str(config["webhook_port"]) + "/" + config["webhook_path"]
+		updater.start_webhook(listen="0.0.0.0", port=config["webhook_port"], url_path=config["webhook_path"], key="webhook.key",
+							cert="webhook.pem", webhook_url=wh_url, drop_pending_updates=True)
+	else:
+		updater.start_polling(drop_pending_updates=True)
+		updater.idle()
 
 if __name__ == "__main__":
 	main()

@@ -2,3 +2,5 @@
 __pycache__
 config.json
 testing.py
+webhook.pem
+webhook.key

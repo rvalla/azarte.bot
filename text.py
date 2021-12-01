@@ -21,8 +21,8 @@ class Text():
 
 	def get_poem(self, l):
 		p = ""
-		lines = rd.choice([2,3,5,8,13,21])
-		metric = rd.choice([1,2,2,3,3,3,3,5])
+		lines = rd.choice([5,8,8,8,13,21])
+		metric = rd.choice([1,2,3,3,3,4,5,6])
 		p += self.get_title(l)
 		for i in range(lines):
 			p += self.get_line(l, metric)
