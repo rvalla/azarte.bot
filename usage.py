@@ -34,7 +34,8 @@ class Usage():
 			"choice: " + str(self.choice) + "\n" + \
 			"language: " + str(self.language) + "\n" + \
 			"help: " + str(self.help) + "\n" + \
-			"wrong_message: " + str(self.wrong_message)
+			"wrong_message: " + str(self.wrong_message) + "\n" \
+			"errors: " + str(self.errors)			
 		return m
 
 	#Saving usage to file...

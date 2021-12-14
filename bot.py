@@ -234,16 +234,16 @@ def decide_text(update, context, selection):
 	l = get_language(id)
 	increase_request(2, txt)
 	if selection == 0:
-		text_request(update, context, id, l, txt.get_poem(l), "txt_poem", "random poem")
+		text_request(update, context, id, l, txt.get_poem(l), "txt_poem")
 		us.add_text(0)
 	elif selection == 1:
-		text_request(update, context, id, l, txt.get_abstract(l), "txt_abstract", "random abstract")
+		text_request(update, context, id, l, txt.get_abstract(l), "txt_abstract")
 		us.add_text(1)
 	elif selection == 2:
-		text_request(update, context, id, l, txt.get_microtale(l), "txt_microtale", "microtale")
+		text_request(update, context, id, l, txt.get_microtale(l), "txt_microtale")
 		us.add_text(2)
 	elif selection == 3:
-		text_request(update, context, id, l, txt.get_definition(l), "txt_definition", "fictional definition")
+		text_request(update, context, id, l, txt.get_definition(l), "txt_definition")
 		us.add_text(3)
 
 #Deciding when to update random variables configuration...
