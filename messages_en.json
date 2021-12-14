@@ -25,5 +25,5 @@
 	"help": "Check the <i>command list</i>. I am a trial and error fan...",
 	"help2": "Look for the <i>Read Me</i> <a href='https://gitlab.com/azarte/azarte_bot'>here</a>.",
 	"wrong_message": "If you want to chat look for somebody who passes a Turing test. Send me commands!",
-	"empty": "I feel empty..."
+	"empty": "Nice try. But it is not possible to choose an element from the empty set."
 }

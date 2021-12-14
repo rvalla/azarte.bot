@@ -25,5 +25,5 @@
 	"help": "Revisá la <i>lista de comandos</i>. Probar y equivocarse es la clave...",
 	"help2": "Podés acceder al <i>Read Me</i> <a href='https://gitlab.com/azarte/azarte_bot'>acá</a>.",
 	"wrong_message": "Si querés charlar buscate alguien que supere el test de Turing. A mí mandame un comando...",
-	"empty": "Triste el vacío que siento"
+	"empty": "Buen intento. Pero no es posible elegir un elemento del conjunto vacío."
 }

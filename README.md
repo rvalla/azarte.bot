@@ -7,8 +7,9 @@ It is part of **azarte** project obviously.
 
 ## online status
 
-**Azarte Bot** is not currently deployed. It will be available during some moments of the week while I run
-some tests. Stay tuned!
+[**Azarte Bot**](https://t.me/azarte_bot) is currently deployed in a *virtual machine* from
+[Oracle Cloud Infrastructure](https://www.oracle.com/cloud/). It will be online most of the time, when I am not
+working in it.  
 
 ## commands
 
@@ -26,8 +27,8 @@ Here you can see the list of available commands. Some of them allow you to pass 
 ## running the code
 
 Note that you will need a *config.json* file on root which includes the bot's mandatory token to run this software.
-Currently *token* (provided by [@BotFather](https://t.me/BotFather) and *logging* (info, debugging or persistent)
-are needed:
+Currently *token* (provided by [@BotFather](https://t.me/BotFather), *logging* (info, debugging or persistent) and
+*webhook* related data are needed:
 
 ```
 {
@@ -37,7 +38,12 @@ are needed:
 	"admin_id": "A mistery",
 	"link": "https://t.me/azarte_bot",
 	"token": "I won't tell you my token",
-	"logging": "info",
+	"password": "Another mistery",
+	"public_ip": "192.168.0.1",
+	"webhook": true,
+	"webhook_path": "an_url_path_for_your_webhook",
+	"webhook_port": 8443,
+	"logging": "info"
 }
 
 ```
