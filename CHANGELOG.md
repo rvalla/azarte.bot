@@ -2,6 +2,18 @@
 
 # azarte: telegram bot changelog
 
+## 2021-12-30: v0.4 beta
+
+Adding new text assets in english (translations still need to be reviewed). Fixing minor bugs. The **bot**
+answer with *random replies* when somebody chat with it directly in groups now.    
+
+The changes in the **bot** commands are:
+
+- **/noise**: the command to access auditive alternatives. You can ask for random sounds and La Monte Young's styled
+scores.  
+- **/genuary**: the command to enter the artificially generated month of time where we build code that makes beautiful
+things.  
+
 ## 2021-11-14: v0.3.1 beta
 
 Fixing minor and stupid bugs. The bot is running correctly now. Handling text messages outside any command,

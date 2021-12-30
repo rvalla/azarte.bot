@@ -10,6 +10,7 @@
 	"img_surprise": "Let's see if I can surprise you!",
 	"sound": "I can offer you different sound alternatives:",
 	"sound_surprise": "I chose a random musical fragment for you:",
+	"sound_score": "I propose you to play the following score:",
 	"text": "I can offer you different textual alternatives:",
 	"txt_microtale": "I chose this microtale from my database:",
 	"txt_definition": "I found this definition in my <i>fictional dictionary</i>",
@@ -25,5 +26,6 @@
 	"help": "Check the <i>command list</i>. I am a trial and error fan...",
 	"help2": "Look for the <i>Read Me</i> <a href='https://gitlab.com/azarte/azarte_bot'>here</a>.",
 	"wrong_message": "If you want to chat look for somebody who passes a Turing test. Send me commands!",
-	"empty": "Nice try. But it is not possible to choose an element from the empty set."
+	"empty": "Nice try. But it is not possible to choose an element from the empty set.",
+	"genuary_0": "Wait! I will be part of #genuary since 2022-01-01. Meanwhile you can visit the <a href='https://genuary.art'>official site</a>."
 }

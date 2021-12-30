@@ -18,6 +18,8 @@ Here you can see the list of available commands. Some of them allow you to pass 
 - **/start**: returns simply a greeting.  
 - **/color**: starts the visual alternatives.
 - **/text**: starts the textual alternatives.  
+- **/noise**: starts the auditive alternatives.  
+- **/genuary**: the command to enter the artificially generated month of time where we build code that makes beautiful things.  
 - **/number (f)**: returns a random number rolling a dice with *f* faces.  
 - **/sequence (f) (n)**: returns a random sequence of *n* numbers rolling a dice with *f* faces.  
 - **/choice a b c**: returns a random word from your message.
@@ -54,6 +56,9 @@ this case I need to mention:
 
 - [**Python**](https://www.python.org/): the programming language I used.  
 - [**python-telegram-bot**](https://python-telegram-bot.org/): the library I used to contact the *Telegram API*.  
+
+Proprietary software has helped here too. I must especially mention [DeepL translator](https://www.deepl.com/translator).
+Even though I know English, it has helped me a lot to translate the content of **azarte_bot**.  
 
 Reach **azarte bot** [here](https://t.me/azarte_bot).
 Feel free to contact me by [mail](mailto:rodrigovalla@protonmail.ch) or reach me in

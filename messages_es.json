@@ -10,6 +10,7 @@
 	"img_surprise": "Veamos si puedo sorprenderte...",
 	"sound": "Puedo ofrecerte distintas alternativas sonoras:",
 	"sound_surprise": "Elegí un fragmento musical al azar para vos:",
+	"sound_score": "Te propongo ejecutar la siguiente partitura:",
 	"text": "Puedo ofrecerte distintas alternativas textuales:",
 	"txt_microtale": "Elegí este microrrelato de mi base de datos:",
 	"txt_definition": "Encontré esta definición en mi <i>diccionario ficticio</i>:",
@@ -25,5 +26,6 @@
 	"help": "Revisá la <i>lista de comandos</i>. Probar y equivocarse es la clave...",
 	"help2": "Podés acceder al <i>Read Me</i> <a href='https://gitlab.com/azarte/azarte_bot'>acá</a>.",
 	"wrong_message": "Si querés charlar buscate alguien que supere el test de Turing. A mí mandame un comando...",
-	"empty": "Buen intento. Pero no es posible elegir un elemento del conjunto vacío."
+	"empty": "Buen intento. Pero no es posible elegir un elemento del conjunto vacío.",
+	"genuary_0": "Esperá. Voy a ser parte de #genuary desde el 1/1/2022. Mientras tanto podés visitar la <a href='https://genuary.art'>página oficial</a>."
 }

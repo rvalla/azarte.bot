@@ -7,6 +7,7 @@ from messages import Messages
 from assets import Assets
 from text import Text
 from image import Image
+from genuary import Genuary
 from myrandom import MyRandom
 
 config = js.load(open("config.json")) #The configuration .json file (token included)
@@ -15,6 +16,7 @@ msg = Messages() #The class which knows what to say...
 ass = Assets() #The class to access the different persistent assets...
 txt = Text() #The class which create text alternatives...
 img = Image() #The class which create visual alternatives...
+gny = Genuary() #The class to process #genuary related requests...
 mrd = MyRandom() #A class with some custom random functions...
 en_users = set() #In this set the bot store ids from users who prefer to speak in English
 requests_counter = [0,0,0] #Counting the number of requests by category (image, sound, text)
@@ -59,10 +61,11 @@ def sound(update, context):
 	b = []
 	l = get_language(id)
 	if l == 1:
-		b = ["Surprise"]
+		b = ["Score","Surprise"]
 	else:
-		b = ["Sorpresa"]
-	keyboard = [[InlineKeyboardButton(text=b[0], callback_data="s_0")]]
+		b = ["Partitura","Sorpresa"]
+	keyboard = [[InlineKeyboardButton(text=b[0], callback_data="s_0"),
+				InlineKeyboardButton(text=b[1], callback_data="s_1")]]
 	reply = InlineKeyboardMarkup(keyboard)
 	context.bot.send_message(chat_id=id, text=msg.get_message("sound", l), reply_markup=reply, parse_mode=ParseMode.HTML)
 
@@ -94,6 +97,16 @@ def text(update, context):
 def text_request(update, context, id, l, data, msg_tag):
 	context.bot.send_message(chat_id=id, text=msg.get_message(msg_tag, l), parse_mode=ParseMode.HTML)
 	context.bot.send_message(chat_id=id, text=data, parse_mode=ParseMode.HTML)
+
+#Processing a #genuary request...
+def genuary(update, context):
+	d = gny.get_day()
+	id = update.effective_chat.id
+	type, piece = gny.get_art(d)
+	if not type == None:
+		print("this will be interesting")
+	else:
+		context.bot.send_message(chat_id=id, text=msg.genuary_message(d, get_language(id)), parse_mode=ParseMode.HTML)
 
 #Sending a random number to the user...
 def random_number(update, context):
@@ -135,7 +148,6 @@ def random_choice(update, context):
 		context.bot.send_message(chat_id=id, text=msg.get_message("empty", get_language(id)), parse_mode=ParseMode.HTML)
 		us.add_choice(False)
 
-
 #Triggering /help command...
 def print_help(update, context):
 	id = update.effective_chat.id
@@ -159,15 +171,16 @@ def select_language(update, context):
 				InlineKeyboardButton(text="English", callback_data="l_1")]]
 	reply = InlineKeyboardMarkup(keyboard)
 	context.bot.send_message(chat_id=id, text=msg.get_message("language", get_language(id)), reply_markup=reply, parse_mode=ParseMode.HTML)
-	us.add_language()
 
 def set_language(update, context, selection):
 	id = update.effective_chat.id
 	if selection == 1:
 		en_users.add(id)
 		context.bot.send_message(chat_id=id, text=msg.get_message("language2", get_language(id)), parse_mode=ParseMode.HTML)
+		us.add_language(selection)
 	else:
 		en_users.discard(id)
+		us.add_language(selection)
 	context.bot.send_message(chat_id=id, text=msg.get_message("language3", get_language(id)), parse_mode=ParseMode.HTML)
 
 #Distributing button replies...
@@ -188,25 +201,28 @@ def button_click(update, context):
 def decide_image(update, context, selection):
 	id = update.effective_chat.id
 	l = get_language(id)
-	increase_request(0, img)
 	if selection == 0:
 		context.bot.send_message(chat_id=id, text=msg.get_message("img_lines", l), parse_mode=ParseMode.HTML)
 		context.bot.send_chat_action(chat_id=id, action="UPLOAD_PHOTO")
 		image_request(update, context, id, img.draw_lines())
+		increase_request(0, img)
 		us.add_color(0)
 	elif selection == 1:
 		context.bot.send_message(chat_id=id, text=msg.get_message("img_escape", l), parse_mode=ParseMode.HTML)
 		context.bot.send_chat_action(chat_id=id, action="UPLOAD_PHOTO")
 		image_request(update, context, id, img.draw_escape())
+		increase_request(0, img)
 		us.add_color(1)
 	elif selection == 2:
 		context.bot.send_message(chat_id=id, text=msg.get_message("img_clock", l), parse_mode=ParseMode.HTML)
 		context.bot.send_chat_action(chat_id=id, action="UPLOAD_PHOTO")
 		image_request(update, context, id, img.draw_clock())
+		increase_request(0, img)
 		us.add_color(2)
 	elif selection == 3:
 		context.bot.send_message(chat_id=id, text=msg.get_message("img_distribution", l), parse_mode=ParseMode.HTML)
 		context.bot.send_chat_action(chat_id=id, action="UPLOAD_PHOTO")
+		increase_request(0, img)
 		image_request(update, context, id, img.draw_distribution())
 		us.add_color(3)
 	elif selection == 4:
@@ -222,11 +238,15 @@ def decide_image(update, context, selection):
 def decide_sound(update, context, selection):
 	id = update.effective_chat.id
 	l = get_language(id)
-	increase_request(1, img)
-	if selection == 0:
+	if selection == 1:
 		context.bot.send_message(chat_id=id, text=msg.get_message("sound_surprise", l), parse_mode=ParseMode.HTML)
 		sound_request(update, context, id, ass.get_sound())
 		us.add_noise(3)
+	elif selection == 0:
+		m = msg.build_score_message(txt.get_score_data(l), l)
+		context.bot.send_message(chat_id=id, text=msg.get_message("sound_score", l), parse_mode=ParseMode.HTML)
+		context.bot.send_message(chat_id=id, text=m, parse_mode=ParseMode.HTML)
+		us.add_noise(2)
 
 #Triggering requested text functions...
 def decide_text(update, context, selection):
@@ -316,11 +336,12 @@ def main():
 		logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 	updater = Updater(config["token"], request_kwargs={'read_timeout': 5, 'connect_timeout': 5})
 	dp = updater.dispatcher
-	#dp.add_error_handler(error_notification)
+	dp.add_error_handler(error_notification)
 	dp.add_handler(CommandHandler("start", start))
 	dp.add_handler(CommandHandler("color", image))
 	dp.add_handler(CommandHandler("text", text))
 	dp.add_handler(CommandHandler("noise", sound))
+	dp.add_handler(CommandHandler("genuary", genuary))
 	dp.add_handler(CommandHandler("number", random_number))
 	dp.add_handler(CommandHandler("sequence", random_sequence))
 	dp.add_handler(CommandHandler("choice", random_choice))

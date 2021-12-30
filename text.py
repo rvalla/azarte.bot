@@ -14,11 +14,15 @@ class Text():
 		self.fiction_dict_en = open(self.input_path + "en/dictionary.csv").readlines()
 		self.microtales_es = open(self.input_path + "es/microrrelatos.txt").readlines()
 		self.microtales_en = open(self.input_path + "en/microtales.txt").readlines()
+		self.scores_es = open(self.input_path + "es/partituras.csv").readlines()[1:]
+		self.scores_en = open(self.input_path + "en/scores.csv").readlines()[1:]
 
+	#Updating sources...
 	def update(self):
 		self.input_tale_es = open(self.input_path + "es/random/" + rd.choice(self.input_list_es)).readlines()
 		self.input_tale_en = open(self.input_path + "en/random/" + rd.choice(self.input_list_en)).readlines()
 
+	#Function to build a random poem...
 	def get_poem(self, l):
 		p = ""
 		lines = rd.choice([5,8,8,8,13,21])
@@ -28,6 +32,7 @@ class Text():
 			p += self.get_line(l, metric)
 		return p
 
+	#Function to build a random poem line...
 	def get_line(self, l, m):
 		line = ""
 		source = None
@@ -43,6 +48,7 @@ class Text():
 		line += "\n"
 		return line
 
+	#Deciding a poem's title...
 	def get_title(self, l):
 		if l == 0:
 			r = rd.randint(0, len(self.input_tale_es) - 1)
@@ -53,6 +59,7 @@ class Text():
 		title = "<b>" + rd.choice(source) + "</b>" + "\n" + "\n"
 		return title
 
+	#Building a random abstract...
 	def get_abstract(self, l):
 		abstract = ""
 		if l == 0:
@@ -61,6 +68,7 @@ class Text():
 			abstract = self.build_abstract(self.input_tale_en)
 		return abstract
 
+	#Building a random abstract...
 	def build_abstract(self, source):
 		count = len(source)
 		r = rd.randint(1,count-1)
@@ -81,6 +89,7 @@ class Text():
 		abstract += " " + words[count-1] + "."
 		return abstract[1:].capitalize()
 
+	#Returning a fictional definition from the database...
 	def get_definition(self, l):
 		d = ""
 		if l == 0:
@@ -89,6 +98,7 @@ class Text():
 			d = rd.choice(self.fiction_dict_en)
 		return self.format_definition(d)
 
+	#Formating a fictional definition...
 	def format_definition(self, s):
 		a = s.split(";")
 		d = "<b>" + a[0] + "</b> "
@@ -96,15 +106,26 @@ class Text():
 		d += a[2]
 		return d
 
+	#Returning a microtale from the database...
 	def get_microtale(self, l):
 		mt = "<i>"
 		if l == 0:
 			mt += rd.choice(self.microtales_es)
-		elif l == 1:
+		else:
 			mt +=  rd.choice(self.microtales_en)
 		mt += "</i>"
 		return mt
 
+	#Returning a score from the database...
+	def get_score_data(self, l):
+		data = None
+		if l == 0:
+			data = rd.choice(self.scores_es)
+		else:
+			data = rd.choice(self.scores_en)
+		return data.split(";")
+
+	#Formating a number sequence...
 	def format_sequence(self, s):
 		f = ""
 		for v in s:

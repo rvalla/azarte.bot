@@ -23,3 +23,21 @@ class Messages():
 			return rd.choice(self.replies_en)
 		else:
 			return rd.choice(self.replies_es)
+
+	#Formatin a score message...
+	def build_score_message(self, data, l):
+		m = "<b>" + data[0] + "</b>\n"
+		if l == 0:
+			m += "Materiales necesarios: " + data[1] + "\n\n"
+		else:
+			m += "Materials needed: " + data[1] + "\n\n"
+		m += "<i>" + data[2] + "</i>"
+		return m
+
+	#Building #genuary messages...
+	def genuary_message(self, day, l):
+		key = "genuary_" + str(day)
+		if l == 1:
+			return self.msg_en[key]
+		else:
+			return self.msg_es[key]

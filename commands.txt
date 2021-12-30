@@ -1,6 +1,8 @@
 start - Primero te saludo.
 color - Lo que puedo ofrecer visualmente.
 text - Lo que puedo ofrecer textualmente.
+noise - Lo que puedo ofrecer auditivamente.
+genuary - Metete en el mes de tiempo generado artificialmente.
 number - Tiro un dado de cualquier cantidad de caras.
 sequence - Tiro un dado varias veces.
 choice - Elijo una palabra de tu mensaje.
