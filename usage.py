@@ -13,11 +13,11 @@ class Usage():
 		self.start = 0
 		self.color = [0,0,0,0,0,0] #lines, escape, clock, distribution, attractor, surprise...
 		self.text = [0,0,0,0] #poem, abstract, microtale, definition...
-		self.noise = [0,0,0,0] #melody, counterpoint, clock, surprise...
+		self.noise = [0,0,0,0] #melody, counterpoint, score, surprise...
 		self.number = 0
 		self.sequence = 0
 		self.choice = [0,0] #success, empty...
-		self.language = 0
+		self.language = [0,0] #spanish, english...
 		self.help = 0
 		self.wrong_message = 0
 		self.errors = 0
@@ -35,7 +35,7 @@ class Usage():
 			"language: " + str(self.language) + "\n" + \
 			"help: " + str(self.help) + "\n" + \
 			"wrong_message: " + str(self.wrong_message) + "\n" \
-			"errors: " + str(self.errors)			
+			"errors: " + str(self.errors)
 		return m
 
 	#Saving usage to file...
@@ -63,7 +63,8 @@ class Usage():
 		line += str(self.choice) + ";"
 		line += str(self.language) + ";"
 		line += str(self.help) + ";"
-		line += str(self.wrong_message) + "\n"
+		line += str(self.wrong_message) + ";"
+		line += str(self.errors) + "\n"
 		return line
 
 	#Registering a new start command...
@@ -98,8 +99,8 @@ class Usage():
 			self.choice[1] += 1
 
 	#Registering a new language...
-	def add_language(self):
-		self.language += 1
+	def add_language(self, l):
+		self.language[l] += 1
 
 	#Registering a new help...
 	def add_help(self):

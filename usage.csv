@@ -1,1 +1,2 @@
-date;interval;start;color;text;noise;number;sequence;choice;language;help;wrong_message
+date;interval;start;color;text;noise;number;sequence;choice;language;help;wrong_message;errors
+2021-12-30;15 days, 14:38:11;0;[7, 7, 0, 2, 0, 0];[4, 2, 0, 0];[0, 0, 0, 0];0;0;[0, 0];[0,1];0;12;1
