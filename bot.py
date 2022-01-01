@@ -2,6 +2,7 @@ from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, MessageH
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
 import traceback, logging
 import json as js
+import importlib as iplib
 from usage import Usage
 from messages import Messages
 from assets import Assets
@@ -100,13 +101,26 @@ def text_request(update, context, id, l, data, msg_tag):
 
 #Processing a #genuary request...
 def genuary(update, context):
-	d = gny.get_day()
-	id = update.effective_chat.id
-	type, piece = gny.get_art(d)
-	if not type == None:
-		print("this will be interesting")
+	m = update.message.text.split(" ")
+	d = None
+	if len(m) == 2:
+		try:
+			d = int(m[1])
+		except:
+			d = 0
 	else:
-		context.bot.send_message(chat_id=id, text=msg.genuary_message(d, get_language(id)), parse_mode=ParseMode.HTML)
+		d = gny.get_day()
+	id = update.effective_chat.id
+	l = get_language(id)
+	type, piece = gny.get_art(d)
+	context.bot.send_message(chat_id=id, text=msg.genuary_message(d, l), parse_mode=ParseMode.HTML)
+	if not type == None:
+		if type == "image":
+			context.bot.send_chat_action(chat_id=id, action="UPLOAD_PHOTO")
+			image_request(update, context, id, piece)
+	else:
+		context.bot.send_message(chat_id=id, text=msg.genuary_message(0, l), parse_mode=ParseMode.HTML)
+	us.add_genuary()
 
 #Sending a random number to the user...
 def random_number(update, context):
@@ -290,6 +304,21 @@ def get_language(id):
 	else:
 		return 0
 
+#Saving usage data...
+def reload(update, context):
+	id = update.effective_chat.id
+	m = update.message.text.split(" ")
+	if len(m) > 1 and m[1] == config["password"]:
+		import genuary
+		iplib.reload(genuary)
+		from genuary import Genuary
+		global gny
+		gny = Genuary()
+		context.bot.send_message(chat_id=id, text="El bot actualizó correctamente...", parse_mode=ParseMode.HTML)
+	else:
+		logging.info(hide_id(id) + " wanted to reload bot utilities...")
+		context.bot.send_message(chat_id=id, text=msg.get_message("intruder"), parse_mode=ParseMode.HTML)
+
 #Sending usage data...
 def bot_usage(update, context):
 	id = update.effective_chat.id
@@ -336,7 +365,7 @@ def main():
 		logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 	updater = Updater(config["token"], request_kwargs={'read_timeout': 5, 'connect_timeout': 5})
 	dp = updater.dispatcher
-	dp.add_error_handler(error_notification)
+	#dp.add_error_handler(error_notification)
 	dp.add_handler(CommandHandler("start", start))
 	dp.add_handler(CommandHandler("color", image))
 	dp.add_handler(CommandHandler("text", text))
@@ -348,6 +377,7 @@ def main():
 	dp.add_handler(CommandHandler("language", select_language))
 	dp.add_handler(CommandHandler("help", print_help))
 	dp.add_handler(CallbackQueryHandler(button_click))
+	dp.add_handler(CommandHandler("reload", reload))
 	dp.add_handler(CommandHandler("botusage", bot_usage))
 	dp.add_handler(CommandHandler("saveusage", save_usage))
 	dp.add_handler(MessageHandler(Filters.text & ~Filters.command, wrong_message))
