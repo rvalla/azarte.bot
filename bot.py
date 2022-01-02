@@ -101,23 +101,24 @@ def text_request(update, context, id, l, data, msg_tag):
 
 #Processing a #genuary request...
 def genuary(update, context):
+	id = update.effective_chat.id
+	l = get_language(id)
 	m = update.message.text.split(" ")
 	d = None
 	if len(m) == 2:
 		try:
 			d = int(m[1])
 		except:
-			d = 0
+			d = gny.get_day()
 	else:
 		d = gny.get_day()
-	id = update.effective_chat.id
-	l = get_language(id)
-	type, piece = gny.get_art(d)
 	context.bot.send_message(chat_id=id, text=msg.genuary_message(d, l), parse_mode=ParseMode.HTML)
+	type, piece = gny.get_art(d)
 	if not type == None:
 		if type == "image":
-			context.bot.send_chat_action(chat_id=id, action="UPLOAD_PHOTO")
 			image_request(update, context, id, piece)
+	else:
+		context.bot.send_message(chat_id=id, text=msg.genuary_message(0, l), parse_mode=ParseMode.HTML)
 	us.add_genuary()
 
 #Sending a random number to the user...
