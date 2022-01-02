@@ -118,8 +118,6 @@ def genuary(update, context):
 		if type == "image":
 			context.bot.send_chat_action(chat_id=id, action="UPLOAD_PHOTO")
 			image_request(update, context, id, piece)
-	else:
-		context.bot.send_message(chat_id=id, text=msg.genuary_message(0, l), parse_mode=ParseMode.HTML)
 	us.add_genuary()
 
 #Sending a random number to the user...

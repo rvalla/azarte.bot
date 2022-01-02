@@ -1,8 +1,25 @@
-from io import BytesIO
+import time as tm
 import random as rd
+from PIL import Image as im
 
 class GenUtil():
 	"A class to join interesting functions for genuary..."
+
+	#Getting a random color based on time in rgb space...
+	def get_time_color(self):
+		t = tm.localtime()
+		r = t.tm_sec * 2
+		g = t.tm_min * 2
+		b = t.tm_hour * 5
+		return (r,g,b)
+
+	#Getting a random color based on time in rgba space...
+	def get_time_alpha_color(self, alpha):
+		t = tm.localtime()
+		r = t.tm_sec * 2
+		g = t.tm_min * 2
+		b = t.tm_hour * 5
+		return (r,g,b, alpha)
 
 	#Moving a color randomly in rgba color space...
 	def move_color(self, color, motion):
@@ -42,11 +59,3 @@ class GenUtil():
 		back_image = im.new("RGBA", top_image.size, background)
 		new = im.composite(back_image, top_image, mask)
 		new.save(name + ".jpg")
-
-	#The function to store the Image object in a byte stream...
-	def create_image(self, image):
-		file = BytesIO()
-		image.save(file, "jpeg", quality=85, optimize=True)
-		file.name = "random_creation.jpg"
-		file.seek(0)
-		return file
