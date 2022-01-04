@@ -99,7 +99,6 @@ class Genuary():
 		while d < days:
 			self.simulate_day(aw, ah, virus, pixels)
 			d += 1
-			print(d, end="\r")
 		return ut.create_image(self.paint_gen_3(w,h,aw,ah,margins,pixels,background))
 
 	def load_gen_pixels(self,ah,aw,background):
@@ -119,16 +118,23 @@ class Genuary():
 		return virus
 
 	def simulate_day(self, aw, ah, virus, pixels):
+		infected_list = self.infected_list(ah, aw, pixels)
+		for p in infected_list:
+			for i in range(-2,3):
+				for j in range(-2,3):
+					t = rd.random()
+					if t < virus.threshold:
+						pixels[(p[0]+i)%ah][(p[1]+j)%aw].infection(virus)
+			pixels[p[0]][p[1]].update()
+		virus.update()
+
+	def infected_list(self, ah, aw, pixels):
+		l = []
 		for h in range(ah):
 			for w in range(aw):
 				if pixels[h][w].is_infected:
-					for i in range(-2,2):
-						for j in range(-2,2):
-							t = rd.random()
-							if t < virus.threshold:
-								pixels[(h+i)%ah][(w+j)%aw].infection(virus)
-					pixels[h][w].update()
-		virus.update()
+					l.append((h,w))
+		return l
 
 	def paint_gen_3(self, w, h, aw, ah, margins, pixels, background):
 		canvas = NCanvas(h, w, background)
