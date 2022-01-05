@@ -6,8 +6,9 @@ ut = GenUtil()
 class GenVirus():
 	"A class to infect pixels..."
 
-	def __init__(self, color, threshold, mutation_cycle, duration):
+	def __init__(self, color, contacts, threshold, mutation_cycle, duration):
 		self.color = color
+		self.contacts = contacts
 		self.threshold = threshold
 		self.mutation_cycle = mutation_cycle
 		self.last_mutation = 0

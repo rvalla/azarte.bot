@@ -5,10 +5,9 @@ class DCanvas():
 
 	def __init__(self, width, height, background):
 		self.background = background
-		self.w = width
-		self.h = height
-		self.c = (self.w/2, self.h/2)
-		self.canvas = im.new("RGB",(self.w, self.h),self.background)
+		self.hw = [height,width]
+		self.c = (self.hw[0]/2, self.hw[1]/2)
+		self.canvas = im.new("RGB",(self.hw[1], self.hw[0]),self.background)
 		self.draw = idraw.Draw(self.canvas)
 
 	#Function to draw a line...
