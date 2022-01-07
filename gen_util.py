@@ -45,6 +45,13 @@ class GenUtil():
 	def invert_alpha_color(self, color):
 		return (255-color[0],255-color[1], 255-color[2],255-color[3])
 
+	#Changing a color with control...
+	def color_grading(self, color, destiny, speed):
+		r = color[0] + round((destiny[0] - color[0]) * speed)
+		g = color[1] + round((destiny[0] - color[1]) * speed)
+		b = color[2] + round((destiny[0] - color[2]) * speed)
+		return (r,g,b)
+
 	#A function to get an image combining two images...
 	def mean_image(self, back_image, top_image, name):
 		back_image.convert("RGBA")
@@ -68,3 +75,21 @@ class GenUtil():
 		file.name = "random_creation.jpg"
 		file.seek(0)
 		return file
+
+	#A function to build a random signal...
+	def random_signal(self, base_frequency, base_amplitude, components):
+		signal = []
+		for c in range(components):
+			f = rd.random() * base_frequency
+			a = base_amplitude / (c + 1)
+			signal.append((f, a))
+		return signal
+
+	#A function to build a harmonic signal...
+	def harmonic_signal(self, base_frequency, base_amplitude, components):
+		signal = []
+		for c in range(components):
+			f = base_frequency * (c + 1)
+			a = base_amplitude / (c + 1)
+			signal.append((f, a))
+		return signal

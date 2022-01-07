@@ -49,6 +49,13 @@ class Genuary():
 			c = ut.get_time_color()
 			c2 = ut.invert_color(c)
 			return "image", self.gen_5(self.w - 320, self.h - 320, (255,255,255), [c, c2], 0.8, [160,160], [5,5], 20)
+		elif day == 6:
+			c = ut.get_time_color()
+			off = rd.random() * 75 + 25
+			s = rd.randint(5,15)
+			signal_A = ut.random_signal(rd.random()*5, 10, 5)
+			signal_B = ut.random_signal(rd.random()*5, 10, 3)
+			return "image", self.gen_6(self.w, self.h, [100,100], (255,255,255), c, signal_A, signal_B, 0.1, off, s, 0.005)
 		else:
 			return None, "Nothing to send..."
 
@@ -227,6 +234,28 @@ class Genuary():
 				canvas.draw_line(color, width, (a1,b1), (a2,b2))
 			elif y == 1:
 				canvas.draw_line(color, width, (b1, a1), (b2, a2))
+
+	#Building a day 6 piece...
+	def gen_6(self, w, h, margins, background, color, signal_A, signal_B, resolution, offset, scale, speed):
+		canvas = DCanvas(w + margins[1] * 2, h + margins[0] * 2, background)
+		signal_width = round(w - offset)
+		signal_A_h = h // 3
+		signal_B_h = 2 * signal_A_h
+		for l in range(signal_width):
+			x1 = l + margins[1]
+			x2 = l + offset + margins[1]
+			y1 = signal_A_h + self.get_signal_y(signal_A, resolution * l, scale) + margins[0]
+			y2 = signal_B_h + self.get_signal_y(signal_B, resolution * l, scale) + margins[0]
+			canvas.draw_line(color, 0, (x1,y1), (x2,y2))
+			color = ut.move_color(color, 2)
+			color = ut.color_grading(color, background, speed)
+		return ut.create_image(canvas.canvas)
+
+	def get_signal_y(self, signal, angle, scale):
+		y = math.pi / 2
+		for s in signal:
+			y += math.sin(s[0] * angle) * s[1] * scale
+		return y
 
 	#Util...
 	def is_point_in(self, point, w, h):
