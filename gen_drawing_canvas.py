@@ -10,6 +10,10 @@ class DCanvas():
 		self.canvas = im.new("RGB",(self.hw[1], self.hw[0]),self.background)
 		self.draw = idraw.Draw(self.canvas)
 
+	#Function to draw a point...
+	def draw_point(self, c, p):
+		self.draw.point(p, fill=c)
+
 	#Function to draw a line...
 	def draw_line(self, c, w, a, b):
 		self.draw.line([a,b], fill=c, width=w)

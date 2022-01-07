@@ -8,6 +8,7 @@ from gen_drawing_canvas import DCanvas
 from gen_data_canvas import NCanvas
 from gen_virus import GenVirus
 from gen_pixel import GenPixel
+from gen_color import GenColor
 
 ut = GenUtil()
 
@@ -56,6 +57,16 @@ class Genuary():
 			signal_A = ut.random_signal(rd.random()*5, 10, 5)
 			signal_B = ut.random_signal(rd.random()*5, 10, 3)
 			return "image", self.gen_6(self.w, self.h, [100,100], (255,255,255), c, signal_A, signal_B, 0.1, off, s, 0.005)
+		elif day == 7:
+			c = ut.get_time_color()
+			p = rd.randint(13,89)
+			return "image", self.gen_7(self.w, self.h, [160,160], (255,255,255), c, p, 2)
+		elif day == 8:
+			c = ut.get_time_color()
+			signal = ut.random_signal(rd.random(), 10, 3)
+			s = rd.randint(5,15)
+			speed = rd.random() / 25
+			return "image", self.gen_8(self.w, self.h, [160,160], (255,255,255), c, signal, 0.1, s, 34, speed)
 		else:
 			return None, "Nothing to send..."
 
@@ -251,11 +262,41 @@ class Genuary():
 			color = ut.color_grading(color, background, speed)
 		return ut.create_image(canvas.canvas)
 
-	def get_signal_y(self, signal, angle, scale):
-		y = math.pi / 2
-		for s in signal:
-			y += math.sin(s[0] * angle) * s[1] * scale
-		return y
+	#Building a day 7 piece...
+	def gen_7(self, w, h, margins, background, color, points, line_width):
+		color = GenColor(color)
+		canvas = DCanvas(w + margins[1] * 2, h + margins[0] * 2, background)
+		points = self.load_LeWitt_points(w, h, points, margins)
+		for p1 in range(len(points)):
+			for p2 in points[p1:]:
+				canvas.draw_line(color.c, line_width, points[p1], p2)
+				color.translate(2)
+		return ut.create_image(canvas.canvas)
+
+	def load_LeWitt_points(self, w, h, points, margins):
+		xs = rd.sample(range(0,w),points)
+		ys = rd.sample(range(0,h),points)
+		list = []
+		for x, y in zip(xs, ys):
+			list.append((margins[1] + x, margins[0] + y))
+		return list
+
+	#Building a day 8 piece...
+	def gen_8(self, w, h, margins, background, color, signal, resolution, scale, lines, speed):
+		color = GenColor(color)
+		canvas = DCanvas(w + margins[1] * 2, h + margins[0] * 2, background)
+		self.paint_single_curve(canvas, w, h, margins, color, background, signal, lines, resolution, scale, speed)
+		return ut.create_image(canvas.canvas)
+
+	def paint_single_curve(self, canvas, w, h, margins, color, background, signal, lines, resolution, scale, speed):
+		signal_h = h // 2
+		for l in range(lines):
+			for s in range(w):
+				x = s + margins[1]
+				y = signal_h + self.get_signal_y(signal, resolution * s, scale) + margins[0]
+				canvas.draw_point(color.c, (x,y))
+			signal_h += 1
+			color.degrade(background, speed)
 
 	#Util...
 	def is_point_in(self, point, w, h):
@@ -263,3 +304,9 @@ class Genuary():
 		if (point[0] < 0 or point[0] > w or point[1] < 0 or point[1] > h):
 			is_in = False
 		return is_in
+
+	def get_signal_y(self, signal, angle, scale):
+		y = math.pi / 2
+		for s in signal:
+			y += math.sin(s[0] * (angle + s[2])) * s[1] * scale
+		return y

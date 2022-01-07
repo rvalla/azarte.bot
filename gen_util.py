@@ -1,4 +1,4 @@
-from io import BytesIO
+import math
 import time as tm
 import random as rd
 from PIL import Image as im
@@ -22,14 +22,14 @@ class GenUtil():
 		b = t.tm_hour * 5
 		return (r,g,b, alpha)
 
-	#Moving a color randomly in rgba color space...
+	#Moving a color randomly in rgb color space...
 	def move_color(self, color, motion):
 		r = rd.randint(-motion,motion)
 		g = rd.randint(-motion,motion)
 		b = rd.randint(-motion,motion)
 		return ((color[0]+r)%255,(color[1]+g)%255,(color[2]+b)%255)
 
-	#A function to invert a color in rgba color space...
+	#A function to invert a color in rgb color space...
 	def invert_color(self, color):
 		return (255-color[0],255-color[1],255-color[2])
 
@@ -68,28 +68,22 @@ class GenUtil():
 		new = im.composite(back_image, top_image, mask)
 		new.save(name + ".jpg")
 
-	#The function to store the Image object in a byte stream...
-	def create_image(self, image):
-		file = BytesIO()
-		image.save(file, "jpeg", quality=85, optimize=True)
-		file.name = "random_creation.jpg"
-		file.seek(0)
-		return file
-
 	#A function to build a random signal...
 	def random_signal(self, base_frequency, base_amplitude, components):
 		signal = []
 		for c in range(components):
-			f = rd.random() * base_frequency
+			fq = rd.random() * base_frequency
 			a = base_amplitude / (c + 1)
-			signal.append((f, a))
+			fase = rd.random() * math.pi * 2
+			signal.append((fq, a, fase))
 		return signal
 
 	#A function to build a harmonic signal...
 	def harmonic_signal(self, base_frequency, base_amplitude, components):
 		signal = []
 		for c in range(components):
-			f = base_frequency * (c + 1)
+			fq = base_frequency * (c + 1)
 			a = base_amplitude / (c + 1)
-			signal.append((f, a))
+			fase = rd.random() * math.pi * 2
+			signal.append((fq, a, fase))
 		return signal
