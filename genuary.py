@@ -40,7 +40,7 @@ class Genuary():
 		elif day == 3:
 			c = ut.get_time_color()
 			bg = ut.invert_color(c)
-			return "image", self.gen_3(self.w - 160, self.h - 160, [80,80], bg, c, 90)
+			return "image", self.gen_3(self.w - 160, self.h - 160, [80,80], bg, c, 75)
 		elif day == 4:
 			c = [ut.get_time_alpha_color(30)]
 			c.append(ut.invert_alpha_color(c[0]))

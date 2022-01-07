@@ -1,3 +1,4 @@
+from io import BytesIO
 import math
 import time as tm
 import random as rd
@@ -67,6 +68,14 @@ class GenUtil():
 		back_image = im.new("RGBA", top_image.size, background)
 		new = im.composite(back_image, top_image, mask)
 		new.save(name + ".jpg")
+
+	#The function to store the Image object in a byte stream...
+	def create_image(self, image):
+		file = BytesIO()
+		image.save(file, "jpeg", quality=85, optimize=True)
+		file.name = "random_creation.jpg"
+		file.seek(0)
+		return file
 
 	#A function to build a random signal...
 	def random_signal(self, base_frequency, base_amplitude, components):
