@@ -96,3 +96,25 @@ class GenUtil():
 			fase = rd.random() * math.pi * 2
 			signal.append((fq, a, fase))
 		return signal
+
+	#A function to draw a rectangle with rectangles...
+	def gen_rectangle(self, canvas, w, h, location, density, colors, color_motion, factors, size_factor, constant_size):
+		steps = [h / density[0], w / density[1]]
+		thinghw = [steps[1] * size_factor, steps[0] * size_factor]
+		color_count = len(colors)
+		active_color = rd.randint(0,color_count-1)
+		aux_size = thinghw
+		for i in range(density[0]):
+			active_color = (active_color+i)%color_count
+			c = colors[active_color]
+			if not constant_size:
+				aux_size = (aux_size[0] , (thinghw[1] + i%(4*steps[1])))
+			for j in range(density[1]):
+				x = location[1] + steps[1] / 2 + (j * factors[0])%density[1] * steps[1]
+				y = location[0] + steps[0] / 2 + (j * factors[1] + i * factors[0])%density[0] * steps[0]
+				center = (x, y)
+				if not constant_size:
+					aux_size = (thinghw[0] + j%(4*steps[0]), aux_size[1])
+				canvas.draw_rectangle(c, center, aux_size)
+				c = self.move_alpha_color(c, color_motion)
+			colors[active_color] = c

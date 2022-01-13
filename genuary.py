@@ -32,7 +32,7 @@ class Genuary():
 		if day == 1:
 			c = [ut.get_time_alpha_color(30)]
 			c.append(ut.invert_alpha_color(c[0]))
-			return "image", self.gen_1(self.w - 240, self.h - 240, (255,255,255), c, 0.8, [120, 120])
+			return "image", self.gen_1(self.w, self.h, [160, 160], (255,255,255), c, 10, 0.8)
 		elif day == 2:
 			path = "assets/img/dithering/dithering_" + str(rd.randint(1,8)) + ".jpg"
 			border = rd.randint(0,120) + 60
@@ -47,9 +47,9 @@ class Genuary():
 			angle_var = [rd.random() * math.pi * 2, rd.random() * math.pi * 2]
 			return "image", self.gen_4(self.w - 160, self.h - 160, [80,80], (255,255,255), c, [500,500], angle_var, 300)
 		elif day == 5:
-			c = ut.get_time_color()
-			c2 = ut.invert_color(c)
-			return "image", self.gen_5(self.w - 320, self.h - 320, (255,255,255), [c, c2], 0.8, [160,160], [5,5], 20)
+			c = ut.get_time_alpha_color(30)
+			c2 = ut.invert_alpha_color(c)
+			return "image", self.gen_5(self.w, self.h, [240,240], (255,255,255), [c, c2], 10, 0.8, [5,5], 20)
 		elif day == 6:
 			c = ut.get_time_color()
 			off = rd.random() * 75 + 25
@@ -67,35 +67,22 @@ class Genuary():
 			s = rd.randint(5,15)
 			speed = rd.random() / 25
 			return "image", self.gen_8(self.w, self.h, [160,160], (255,255,255), c, signal, 0.1, s, 34, speed)
+		elif day == 13:
+			c = [ut.get_time_alpha_color(100)]
+			c.append(ut.move_alpha_color(c[0], 25))
+			c.append(ut.move_alpha_color(c[0], 30))
+			c.append(ut.invert_alpha_color(c[0]))
+			return "image", self.gen_13(self.w, self.h, [200,200], (255,255,255), [6,60], c, [3,18], 0.6)
 		else:
 			return None, "Nothing to send..."
 
 	#Building day 1 piece...
-	def gen_1(self, w, h, background, colors, sizefactor, margins):
-		f = [rd.choice(self.factors),rd.choice(self.factors)]
-		canvas = self.gen_1_piece(w, h, background, colors, f, sizefactor, margins)
+	def gen_1(self, w, h, margins, background, colors, color_motion, size_factor):
+		factors = [rd.choice(self.factors),rd.choice(self.factors)]
+		canvas = DCanvas(w, h, background)
+		ut.gen_rectangle(canvas, w - margins[1] * 2, h - margins[0] * 2, margins, [100,100], colors, color_motion,
+							factors, size_factor, False)
 		return ut.create_image(canvas.canvas)
-
-	def gen_1_piece(self, w, h, background, colors, factors, sizefactor, margins):
-		canvas = DCanvas(w,h,background)
-		steps = [(w - margins[0] * 2) / 100, (h - margins[1] * 2) / 100]
-		thingwh = [steps[0] * 1, steps[1] * 1]
-		color_count = len(colors)
-		active_color = 0
-		size = thingwh
-		for i in range(100):
-			active_color = (active_color + i) % color_count
-			c = colors[active_color]
-			size = (size[0] , (thingwh[1] + i%(7*steps[1])))
-			for j in range(100):
-				x = margins[1] + steps[1] / 2 + (j * factors[0])%100 * steps[1]
-				y = margins[0] + steps[0] / 2 + (j * factors[1] + i * factors[0])%100 * steps[0]
-				center = (x, y)
-				size = (thingwh[0] + j%(7*steps[0]), size[1])
-				canvas.draw_rectangle(c, center, size)
-				c = ut.move_color(c, 1)
-			colors[active_color] = c
-		return canvas
 
 	#Building day 2 piece...
 	def gen_2(self, input_path, border, background):
@@ -225,9 +212,11 @@ class Genuary():
 		return (last_point[0] + x, last_point[1] + y)
 
 	#Building a day 5 piece...
-	def gen_5(self, w, h, background, colors, sizefactor, margins, cuts, cuts_width):
-		f = [13,0]
-		canvas = self.gen_1_piece(w, h, background, colors, f, sizefactor, margins)
+	def gen_5(self, w, h, margins, background, colors, color_motion, size_factor, cuts, cuts_width):
+		factors = [rd.choice([13,17,19,23]),0]
+		canvas = DCanvas(w, h, background)
+		ut.gen_rectangle(canvas, w - margins[1] * 2, h - margins[0] * 2, margins, [100,100], colors,
+							color_motion, factors, size_factor, False)
 		self.destroy_square(1, canvas, 20, cuts, background, cuts_width)
 		self.destroy_square(0, canvas, 20, cuts, background, cuts_width)
 		return ut.create_image(canvas.canvas)
@@ -297,6 +286,58 @@ class Genuary():
 				canvas.draw_point(color.c, (x,y))
 			signal_h += 1
 			color.degrade(background, speed)
+
+	#Building a day 13 piece...
+	def gen_13(self, w, h, margins, background, density, colors, color_motion, size_factor):
+		densities = [density, [density[0], round(density[1] * 0.4)]]
+		canvas = DCanvas(w, h, background)
+		self.hexagram(canvas, w, h, margins, colors, color_motion, size_factor, densities)
+		return ut.create_image(canvas.canvas)
+
+	def hexagram(self, canvas, w, h, margins, colors, color_motion, size_factor, densities):
+		height = (h - margins[0] * 2) / 11
+		space = (w - margins[1] * 2) / 5
+		strips = self.get_strips()
+		y = margins[0]
+		for s in strips:
+			factors = self.get_factors(s)
+			color = colors[s%len(colors)]
+			location = [y, margins[1]]
+			if s < 2:
+				if s == 0:
+					ut.gen_rectangle(canvas, w - margins[1] * 2, height, location, densities[0], [color], color_motion[0], factors, size_factor, True)
+				else:
+					ut.gen_rectangle(canvas, w - margins[1] * 2, height, location, densities[0], [color], color_motion[1], factors, size_factor, True)
+			else:
+				if s == 2:
+					ut.gen_rectangle(canvas, 2 * space, height, location, densities[1], [color], color_motion[0], factors, size_factor, True)
+					location[1] += space * 3
+					ut.gen_rectangle(canvas, 2 * space, height, location, densities[1], [color], color_motion[0], factors, size_factor, True)
+				else:
+					ut.gen_rectangle(canvas, 2 * space, height, location, densities[1], [color], color_motion[1], factors, size_factor, True)
+					location[1] += space * 3
+					ut.gen_rectangle(canvas, 2 * space, height, location, densities[1], [color], color_motion[1], factors, size_factor, True)
+			y += 2 * height
+
+	def get_factors(self, case):
+		primes = [13,17,19,23]
+		return [primes[case], 0]
+
+	def get_strips(self):
+		strips = []
+		for s in range(6):
+			strips.append(self.flip_coins())
+		return strips
+
+	#John Cage used 3 coins to decide each line of an hexagram. Then mapped each hexagram to a table...
+	def flip_coins(self):
+		cs = 0
+		for c in range(3):
+			cs += self.flip_coin()
+		return cs
+
+	def flip_coin(self):
+		return rd.choice([0,1])
 
 	#Util...
 	def is_point_in(self, point, w, h):
