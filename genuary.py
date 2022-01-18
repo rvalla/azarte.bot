@@ -9,6 +9,7 @@ from gen_data_canvas import NCanvas
 from gen_virus import GenVirus
 from gen_pixel import GenPixel
 from gen_color import GenColor
+from gen_pendulum import GenPendulum
 
 ut = GenUtil()
 
@@ -73,6 +74,33 @@ class Genuary():
 			c.append(ut.move_alpha_color(c[0], 30))
 			c.append(ut.invert_alpha_color(c[0]))
 			return "image", self.gen_13(self.w, self.h, [200,200], (255,255,255), [6,60], c, [3,18], 0.6)
+		elif day == 14:
+			center = [self.w/2, self.h/2]
+			init_p = [center[0] + 100 + rd.random()*200, center[1] + 100 + rd.random()*200]
+			init_v = [rd.random()*2-1,rd.random()*2-1]
+			return "image", self.gen_14(self.w, self.h, (255,255,255), center, init_p, init_v, 20)
+		elif day == 15:
+			color = ut.get_time_color()
+			center = [self.w/2, self.h/2]
+			init_p = [center[0] + 100 + rd.random()*200, center[1] + 100 + rd.random()*200]
+			init_v = [rd.random()*2-1,rd.random()*2-1]
+			return "image", self.gen_15(self.w, self.h, (255,255,255), color, 2, center, init_p, init_v, 20)
+		elif day == 16:
+			color = ut.get_time_color()
+			signal = ut.random_signal(rd.random(), 10, 3)
+			motion = rd.randint(1,3)
+			lines = [760,380,190]
+			choice = rd.choice(range(len(lines)))
+			return "image", self.gen_16(self.w - 320, self.h - 320, [160,160], (255,255,255), color, motion,
+											signal, 5, lines[choice], 200 + rd.randint(0,200))
+		elif day == 17:
+			colors = [ut.get_time_color()]
+			colors.append(ut.invert_color(colors[0]))
+			colors.append((rd.randint(30,200),rd.randint(30,200),rd.randint(30,200)))
+			return "image", self.gen_17(self.w, self.h, [160,160], (255,255,255), colors, 2, 300, 10, 5)
+		elif day == 18:
+			file_id = "BAACAgEAAxkBAAIRjGHnR14aIMTPwKrFo0woqi9cLeK-AAKiAQACcRI5R5V8hqrHCN0KIwQ"
+			return "video_id", file_id
 		else:
 			return None, "Nothing to send..."
 
@@ -339,6 +367,81 @@ class Genuary():
 	def flip_coin(self):
 		return rd.choice([0,1])
 
+	#Building a day 14 piece...
+	def gen_14(self, w, h, background, center, initial_position, initial_velocity, g_constant):
+		pendulum = GenPendulum(center, initial_position, initial_velocity, g_constant, False, 1)
+		canvas = DCanvas(w, h, background)
+		self.oscillation(canvas, pendulum, GenColor((0,0,0)), 0, 50000, 1)
+		return ut.create_image(canvas.canvas)
+
+	def oscillation(self, canvas, pendulum, color, color_motion, times, grains):
+		for t in range(times):
+			pendulum.update()
+			self.drop_sand(canvas, pendulum, color, grains)
+			color.move(color_motion)
+
+	#Building a day 15 piece...
+	def gen_15(self, w, h, background, color, color_motion, center, initial_position, initial_velocity, g_constant):
+		pendulum = GenPendulum(center, initial_position, initial_velocity, g_constant, False, 1)
+		canvas = DCanvas(w, h, background)
+		self.oscillation(canvas, pendulum, GenColor(color), color_motion, 8000, 20)
+		return ut.create_image(canvas.canvas)
+
+	#Building a day 16 piece...
+	def gen_16(self, w, h, margins, background, c, color_motion, signal, scale, lines, lines_h):
+		color = GenColor(c)
+		color.d = self.set_color_directions()
+		axis = h // 2 + margins[0]
+		canvas = DCanvas(w + margins[1] * 2, h + margins[0] *  2, background)
+		self.draw_gradient_lines(canvas, w, axis, margins, lines, lines_h, signal, scale, color, color_motion)
+		return ut.create_image(canvas.canvas)
+
+	def draw_gradient_lines(self, canvas, w, axis, margins, lines, lines_h, signal, scale, color, color_motion):
+		step = w // lines
+		y_offset = axis - lines_h // 2
+		signal_resolution = w / lines * 0.05
+		for l in range(lines):
+			x = l*step + margins[1]
+			y = - self.get_signal_y(signal, l * signal_resolution, scale) + y_offset
+			canvas.draw_line(color.c, 0, (x,y), (x,y+lines_h))
+			color.overflow(color_motion)
+
+	def set_color_directions(self):
+		r = rd.choice([-1,1])
+		g = rd.choice([-1,1])
+		b = rd.choice([-1,1])
+		return [r,g,b]
+
+	#Building a day 17 piece...
+	def gen_17(self, w, h, margins, background, the_colors, lines_w, lines_height, loops, loop_size):
+		lines_h, lines_m, ys = self.get_y_data(h, margins, lines_height)
+		colors = [GenColor(c) for c in the_colors]
+		canvas = DCanvas(w + margins[1] * 2, h + margins[0] *  2, background)
+		self.draw_getting_close_lines(canvas, w, margins, colors, ys, lines_h, loops, loop_size, lines_w)
+		return ut.create_image(canvas.canvas)
+
+	def draw_getting_close_lines(self, canvas, w, margins, colors, ys, lines_h, loops, loop_size, lines_w):
+		step = w / (loops * loop_size)
+		for l in range(loops):
+			offset = l * step * loop_size + margins[1] + step / 2
+			for t in range(loop_size):
+				x = t*step + offset
+				for i in range(3):
+					canvas.draw_line(colors[i].c, lines_w, (x,ys[i]), (x,ys[i]+lines_h))
+			self.update_getting_close_colors(colors)
+
+	def get_y_data(self, h, margins, lines_h):
+		ys = []
+		margin = h / 3 - lines_h
+		ys.append(margins[0] + margin / 2)
+		ys.append(ys[0] + lines_h + margin)
+		ys.append(ys[1] + lines_h + margin)
+		return lines_h, margin, ys
+
+	def update_getting_close_colors(self, colors):
+		for c in range(3):
+			colors[c].getting_close(colors[rd.choice([0,1,2])].c)
+
 	#Util...
 	def is_point_in(self, point, w, h):
 		is_in = True
@@ -351,3 +454,11 @@ class Genuary():
 		for s in signal:
 			y += math.sin(s[0] * (angle + s[2])) * s[1] * scale
 		return y
+
+	def drop_sand(self, canvas, pendulum, color, grains):
+		for g in range(grains): #dropping grains in each position...
+			noise_x = g * (rd.random() * 10 - 5)
+			noise_y = g * (rd.random() * 10 - 5)
+			x = pendulum.p[0] + noise_x
+			y = pendulum.p[1] + noise_y
+			canvas.draw_point(color.c, (x,y))

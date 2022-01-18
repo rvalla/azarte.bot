@@ -78,6 +78,14 @@ def sound_request(update, context, id, data):
 		logging.info("Network error when uploading!")
 		context.bot.send_message(chat_id=id, text=msg.get_message("error", get_language(id)), parse_mode=ParseMode.HTML)
 
+#The function to deliver the requested video to the user...
+def video_request(update, context, id, data):
+	try:
+		context.bot.send_video(chat_id=id, video=data)
+	except:
+		logging.info("Network error when uploading!")
+		context.bot.send_message(chat_id=id, text=msg.get_message("error", get_language(id)), parse_mode=ParseMode.HTML)
+
 #Starting textual alternatives...
 def text(update, context):
 	id = update.effective_chat.id
@@ -117,6 +125,8 @@ def genuary(update, context):
 	if not type == None:
 		if type == "image":
 			image_request(update, context, id, piece)
+		elif type == "video_id":
+			video_request(update, context, id, piece)
 	else:
 		context.bot.send_message(chat_id=id, text=msg.genuary_message(0, l), parse_mode=ParseMode.HTML)
 	us.add_genuary()
@@ -348,6 +358,10 @@ def print_audio_id(update, context):
 def print_photo_id(update, context):
 	print(update.message.photo[0]["file_id"])
 
+#Function to print file ids from videos...
+def print_video_id(update, context):
+	print(update.message.video["file_id"])
+
 #Hiding the first numbers of a chat id for the log...
 def hide_id(id):
 	s = str(id)
@@ -364,7 +378,7 @@ def main():
 		logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 	updater = Updater(config["token"], request_kwargs={'read_timeout': 5, 'connect_timeout': 5})
 	dp = updater.dispatcher
-	dp.add_error_handler(error_notification)
+	#dp.add_error_handler(error_notification)
 	dp.add_handler(CommandHandler("start", start))
 	dp.add_handler(CommandHandler("color", image))
 	dp.add_handler(CommandHandler("text", text))
@@ -380,7 +394,7 @@ def main():
 	dp.add_handler(CommandHandler("botusage", bot_usage))
 	dp.add_handler(CommandHandler("saveusage", save_usage))
 	dp.add_handler(MessageHandler(Filters.text & ~Filters.command, wrong_message))
-	#dp.add_handler(MessageHandler(Filters.audio & ~Filters.command, print_audio_id))
+	dp.add_handler(MessageHandler(Filters.video & ~Filters.command, print_video_id))
 	dp.bot.send_message(chat_id=config["admin_id"], text="The bot is starting!", parse_mode=ParseMode.HTML)
 	if config["webhook"]:
 		wh_url = "https://" + config["public_ip"] + ":" + str(config["webhook_port"]) + "/" + config["webhook_path"]
