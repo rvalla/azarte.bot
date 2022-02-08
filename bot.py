@@ -1,4 +1,4 @@
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, MessageHandler, Filters
+from telegram.ext import Updater, CommandHandler, ConversationHandler, CallbackQueryHandler, MessageHandler, Filters
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
 import traceback, logging
 import json as js
@@ -9,6 +9,7 @@ from assets import Assets
 from text import Text
 from image import Image
 from genuary import Genuary
+from interaction import Interaction
 from myrandom import MyRandom
 
 config = js.load(open("config.json")) #The configuration .json file (token included)
@@ -18,8 +19,10 @@ ass = Assets() #The class to access the different persistent assets...
 txt = Text() #The class which create text alternatives...
 img = Image() #The class which create visual alternatives...
 gny = Genuary() #The class to process #genuary related requests...
+ion = Interaction() #The class to make thing from user's messages...
 mrd = MyRandom() #A class with some custom random functions...
 en_users = set() #In this set the bot store ids from users who prefer to speak in English
+WAITING = range(1) #Conversation states...
 requests_counter = [0,0,0] #Counting the number of requests by category (image, sound, text)
 update_cycle = 13 #Number of requests before updating configuration...
 
@@ -106,6 +109,34 @@ def text(update, context):
 def text_request(update, context, id, l, data, msg_tag):
 	context.bot.send_message(chat_id=id, text=msg.get_message(msg_tag, l), parse_mode=ParseMode.HTML)
 	context.bot.send_message(chat_id=id, text=data, parse_mode=ParseMode.HTML)
+
+#Starting an interaction...
+def start_interaction(update, context):
+	id = update.effective_chat.id
+	context.bot.send_message(chat_id=id, text=msg.get_message("start_interaction", get_language(id)), parse_mode=ParseMode.HTML)
+	return WAITING
+
+#Ejecuting a text interaction...
+def text_interaction(update, context):
+	id = update.effective_chat.id
+	m = update.message.text
+	us.add_interaction(0)
+	context.bot.send_message(chat_id=id, text=msg.get_message("text_interaction", get_language(id)), parse_mode=ParseMode.HTML)
+	context.bot.send_chat_action(chat_id=id, action="UPLOAD_PHOTO")
+	image_request(update, context, id, ion.build_message_curve(m))
+
+#Canceling the challenge without offering another one...
+def wrong_interaction(update, context):
+	id = update.effective_chat.id
+	us.add_interaction(3)
+	context.bot.send_message(id, text=msg.get_message("wrong_interaction", get_language(id)), parse_mode=ParseMode.HTML)
+
+#Canceling the challenge without offering another one...
+def cancel_interaction(update, context):
+	id = update.effective_chat.id
+	us.add_interaction(3)
+	context.bot.send_message(id, text=msg.get_message("end_interaction", get_language(id)), parse_mode=ParseMode.HTML)
+	return ConversationHandler.END
 
 #Processing a #genuary request...
 def genuary(update, context):
@@ -367,6 +398,18 @@ def hide_id(id):
 	s = str(id)
 	return "****" + s[len(s)-4:]
 
+#Building the conversation handler...
+def build_conversation_handler():
+	handler = ConversationHandler(
+		entry_points=[CommandHandler("interaction", start_interaction)],
+		states={WAITING: [MessageHandler(Filters.text & ~Filters.command, text_interaction),
+						MessageHandler(Filters.photo, wrong_interaction),
+						MessageHandler(Filters.voice, wrong_interaction),
+						MessageHandler(Filters.video, wrong_interaction)]},
+				fallbacks=[MessageHandler(Filters.command, cancel_interaction)],
+				per_chat=True, per_user=False, per_message=False)
+	return handler
+
 #Configuring logging and getting ready to work...
 def main():
 	if config["logging"] == "persistent":
@@ -378,23 +421,24 @@ def main():
 		logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 	updater = Updater(config["token"], request_kwargs={'read_timeout': 5, 'connect_timeout': 5})
 	dp = updater.dispatcher
-	#dp.add_error_handler(error_notification)
-	dp.add_handler(CommandHandler("start", start))
-	dp.add_handler(CommandHandler("color", image))
-	dp.add_handler(CommandHandler("text", text))
-	dp.add_handler(CommandHandler("noise", sound))
-	dp.add_handler(CommandHandler("genuary", genuary))
-	dp.add_handler(CommandHandler("number", random_number))
-	dp.add_handler(CommandHandler("sequence", random_sequence))
-	dp.add_handler(CommandHandler("choice", random_choice))
-	dp.add_handler(CommandHandler("language", select_language))
-	dp.add_handler(CommandHandler("help", print_help))
-	dp.add_handler(CallbackQueryHandler(button_click))
-	dp.add_handler(CommandHandler("reload", reload))
-	dp.add_handler(CommandHandler("botusage", bot_usage))
-	dp.add_handler(CommandHandler("saveusage", save_usage))
-	dp.add_handler(MessageHandler(Filters.text & ~Filters.command, wrong_message))
-	dp.add_handler(MessageHandler(Filters.video & ~Filters.command, print_video_id))
+	dp.add_error_handler(error_notification)
+	dp.add_handler(build_conversation_handler(), group=1)
+	dp.add_handler(MessageHandler(Filters.text & ~Filters.command, wrong_message), group=1)
+	dp.add_handler(CommandHandler("start", start), group=2)
+	dp.add_handler(CommandHandler("color", image), group=2)
+	dp.add_handler(CommandHandler("text", text), group=2)
+	dp.add_handler(CommandHandler("noise", sound), group=2)
+	dp.add_handler(CommandHandler("genuary", genuary), group=2)
+	dp.add_handler(CommandHandler("number", random_number), group=2)
+	dp.add_handler(CommandHandler("sequence", random_sequence), group=2)
+	dp.add_handler(CommandHandler("choice", random_choice), group=2)
+	dp.add_handler(CommandHandler("language", select_language), group=2)
+	dp.add_handler(CommandHandler("help", print_help), group=2)
+	dp.add_handler(CallbackQueryHandler(button_click), group=2)
+	dp.add_handler(CommandHandler("reload", reload), group=2)
+	dp.add_handler(CommandHandler("botusage", bot_usage), group=2)
+	dp.add_handler(CommandHandler("saveusage", save_usage), group=2)
+	#dp.add_handler(MessageHandler(Filters.video & ~Filters.command, print_video_id))
 	dp.bot.send_message(chat_id=config["admin_id"], text="The bot is starting!", parse_mode=ParseMode.HTML)
 	if config["webhook"]:
 		wh_url = "https://" + config["public_ip"] + ":" + str(config["webhook_port"]) + "/" + config["webhook_path"]

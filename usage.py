@@ -14,6 +14,7 @@ class Usage():
 		self.color = [0,0,0,0,0,0] #lines, escape, clock, distribution, attractor, surprise...
 		self.text = [0,0,0,0] #poem, abstract, microtale, definition...
 		self.noise = [0,0,0,0] #melody, counterpoint, score, surprise...
+		self.interaction = [0,0,0,0] #text, image, sound, canceled...
 		self.genuary = 0 #counting genuary requests...
 		self.number = 0
 		self.sequence = 0
@@ -30,6 +31,7 @@ class Usage():
 			"color: " + str(self.color) + "\n" + \
 			"text: " + str(self.text) + "\n" + \
 			"noise: " + str(self.noise) + "\n" + \
+			"interaction: " + str(self.interaction) + "\n" + \
 			"genuary: " + str(self.genuary) + "\n" + \
 			"number: " + str(self.number) + "\n" + \
 			"sequence: " + str(self.sequence) + "\n" + \
@@ -60,6 +62,7 @@ class Usage():
 		line += str(self.color) + ";"
 		line += str(self.text) + ";"
 		line += str(self.noise) + ";"
+		line += str(self.interaction) + ";"
 		line += str(self.genuary) + ";"
 		line += str(self.number) + ";"
 		line += str(self.sequence) + ";"
@@ -85,6 +88,10 @@ class Usage():
 	#Registering a new noise...
 	def add_noise(self, key):
 		self.noise[key] += 1
+
+	#Registering a new interaction...
+	def add_interaction(self, key):
+		self.interaction[key] += 1
 
 	#Registering a new genuary...
 	def add_genuary(self):

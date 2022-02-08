@@ -2,6 +2,7 @@ start - Primero te saludo.
 color - Lo que puedo ofrecer visualmente.
 text - Lo que puedo ofrecer textualmente.
 noise - Lo que puedo ofrecer auditivamente.
+interaction - Lo que puedo hacer con lo que me mandes.
 genuary - Metete en el mes de tiempo generado artificialmente.
 number - Tiro un dado de cualquier cantidad de caras.
 sequence - Tiro un dado varias veces.
