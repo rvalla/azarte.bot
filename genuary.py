@@ -68,6 +68,20 @@ class Genuary():
 			s = rd.randint(5,15)
 			speed = rd.random() / 25
 			return "image", self.gen_8(self.w, self.h, [160,160], (255,255,255), c, signal, 0.1, s, 34, speed)
+		elif day == 9:
+			colors = [ut.get_time_color()]
+			colors.append(ut.invert_color(colors[0]))
+			windows_c = [ut.get_time_alpha_color(100)]
+			windows_c.append(ut.move_alpha_color(windows_c[0],50))
+			windows_c.append(ut.move_alpha_color(windows_c[0],50))
+			buildings = rd.randint(13,21)
+			return "image", self.gen_9(self.w, self.h//3, [40,40], (255,255,255), colors, 25, windows_c, 8, buildings)
+		elif day == 10:
+			c = ut.get_time_color()
+			lines = rd.randint(21,89)
+			scale = rd.randint(5,13)
+			width = 200 // lines
+			return "image", self.gen_10(self.w, self.h, [160,160], (255,255,255), c, 10, lines, width, scale)
 		elif day == 13:
 			c = [ut.get_time_alpha_color(100)]
 			c.append(ut.move_alpha_color(c[0], 25))
@@ -101,6 +115,8 @@ class Genuary():
 		elif day == 18:
 			file_id = "BAACAgEAAxkBAAIRjGHnR14aIMTPwKrFo0woqi9cLeK-AAKiAQACcRI5R5V8hqrHCN0KIwQ"
 			return "video_id", file_id
+		elif day == 25:
+			return None, "Nothing to send..."
 		else:
 			return None, "Nothing to send..."
 
@@ -315,6 +331,122 @@ class Genuary():
 			signal_h += 1
 			color.degrade(background, speed)
 
+	#Building a day 9 piece...
+	def gen_9(self, w, h, margins, background, colors, color_motion, windows_colors, windows_density, buildings):
+		night = rd.choice([True, False])
+		canvas = DCanvas(w + margins[1] * 2, h + margins[0] * 2, background)
+		b_widths, b_heights = self.building_heights(w, h, buildings)
+		self.skyline(canvas, w, h, b_widths, b_heights, colors, buildings, color_motion, margins)
+		self.fill_buildings(canvas, w, h, b_widths, b_heights, buildings, color_motion, windows_colors, margins, night)
+		return ut.create_image(canvas.canvas)
+
+	def skyline(self, canvas, w, h, b_widths, b_heights, colors, buildings, color_motion, margins):
+		x = margins[1] + w / 2
+		y = margins[0] + h / 2
+		canvas.draw_rectangle(colors[0], (x,y), (w, h))
+		for b in range(1, buildings + 1):
+			x = b_widths[b-1] * b - b_widths[b-1] / 2 + margins[1]
+			y = margins[0] + h - b_heights[b - 1] / 2
+			canvas.draw_rectangle(colors[1], (x,y), (b_widths[b-1],b_heights[b-1]))
+			colors[1] = ut.move_color(colors[1], color_motion)
+
+	def fill_buildings(self, canvas, w, h, b_widths, b_heights, buildings, color_motion, windows_colors, margins, night):
+		h_margin = b_widths[0] / 10
+		level_height = b_widths[0] / 2 - 2 * h_margin
+		start_x = margins[1]
+		start_y = 2 * margins[0] + h
+		for b in range(buildings):
+			levels = math.floor((b_heights[b] - 10) / (level_height + h_margin))
+			row = rd.choice([1,2,2,3,3,3,4])
+			self.windows(canvas, w, h, start_x, start_y, levels, h_margin, level_height, b_widths[b], row, color_motion, windows_colors, margins, night)
+			start_x += b_widths[b]
+
+	def windows(self, canvas, w, h, start_x, start_y, levels, margin, height, total_width, row, color_motion, windows_colors, margins, night):
+		width = self.windows_widths(margin, total_width, row)
+		floor = h + margins[0]
+		density = [rd.randint(3,6),rd.randint(5,10)]
+		color = rd.choice(windows_colors)
+		motion = rd.randint(color_motion // 2, color_motion)
+		factors = [rd.choice([11,13,17,19]),rd.choice([0,0,0,17,19,23])]
+		for r in range(row):
+			x = start_x + margin + r * (width + margin)
+			for l in range(levels):
+				window_on = True
+				if night:
+					if rd.random() < 0.5:
+						window_on = False
+				if window_on:
+					y = floor - margin - height - l * (height + margin)
+					ut.gen_rectangle(canvas, width, height, [y,x], density, [color], motion, factors, 1, True)
+
+	def windows_widths(self, margin, total_width, row):
+		width = 0
+		if row == 1:
+			width = total_width - 2 * margin
+		else:
+			width = (total_width - margin) / row - margin
+		return width
+
+	def building_heights(self, w, h, buildings):
+		bw = []
+		step = w / buildings
+		for w in range(buildings):
+			bw.append(step)
+		w / buildings
+		bh = []
+		min = h / 3
+		step = h / 9
+		if buildings > 6:
+			heights = 6
+		else:
+			heights = buildings
+		hs = rd.sample(range(0,6),heights)
+		for i in range(buildings):
+			bh.append(hs[i%len(hs)] * step + min)
+		return bw, bh
+
+	#Building a day 10 piece...
+	def gen_10(self, w, h, margins, background, c, color_motion, lines, line_w, scale):
+		color = GenColor(c)
+		canvas = DCanvas(w + margins[1] * 2, h + margins[0] * 2, background)
+		self.run(canvas, w, h, margins, color, color_motion, lines, line_w, scale)
+		return ut.create_image(canvas.canvas)
+
+	def run(self, canvas, w, h, margins, color, color_motion, lines, line_w, scale):
+		y = h // 2 + margins[0]
+		x = w // 3 + margins[1]
+		for l in range(lines):
+			self.draw_path(canvas, w, h, margins, (x,y), math.pi + rd.random() * 6, scale, line_w, color)
+			color.translate(color_motion)
+
+	def draw_path(self, canvas, w, h, margins, origin, angle, scale, line_w, color):
+		p = origin
+		np = self.get_new_point(p, angle, scale)
+		noise = rd.random() / 100 - 0.005
+		while self.is_line_trap(margins, h, np):
+			canvas.draw_line(color.c, line_w, p, np)
+			p = np
+			np = self.get_new_point(p, angle, scale)
+			angle += noise
+		angle = self.turn(angle)
+		if not self.is_line_out(w, np):
+			self.draw_path(canvas, w, h, margins, p, angle, scale, line_w, color)
+
+	def is_line_trap(self, margins, h, p):
+		if p[0] < margins[1] or p[1] < margins[0] or p[1] > margins[0] + h:
+			return False
+		else:
+			return True
+
+	def is_line_out(self, w, p):
+		if p[0] > w:
+			return True
+		else:
+			return False
+
+	def turn(self, angle):
+		return angle + rd.random() - 0.5
+
 	#Building a day 13 piece...
 	def gen_13(self, w, h, margins, background, density, colors, color_motion, size_factor):
 		densities = [density, [density[0], round(density[1] * 0.4)]]
@@ -448,6 +580,11 @@ class Genuary():
 		if (point[0] < 0 or point[0] > w or point[1] < 0 or point[1] > h):
 			is_in = False
 		return is_in
+
+	def get_new_point(self, last_point, angle, scale):
+		x = math.cos(angle) * scale
+		y = math.sin(angle) * scale
+		return (last_point[0] + x, last_point[1] + y)
 
 	def get_signal_y(self, signal, angle, scale):
 		y = math.pi / 2
