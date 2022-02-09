@@ -1,17 +1,18 @@
+from io import BytesIO
 import math
+import numpy as np
 import random as rd
 import datetime as dt
+import time as tm
 import numpy as np
-from PIL import Image as im
-from gen_util import GenUtil
-from gen_drawing_canvas import DCanvas
-from gen_data_canvas import NCanvas
-from gen_virus import GenVirus
-from gen_pixel import GenPixel
-from gen_color import GenColor
-from gen_pendulum import GenPendulum
-
-ut = GenUtil()
+from PIL import Image as im, ImageDraw as idraw
+#from gen_util import GenUtil
+#from gen_drawing_canvas import DCanvas
+#from gen_data_canvas import NCanvas
+#from gen_virus import GenVirus
+#from gen_pixel import GenPixel
+#from gen_color import GenColor
+#from gen_pendulum import GenPendulum
 
 class Genuary():
 	"The class the bot uses to be part of genuary..."
@@ -599,3 +600,358 @@ class Genuary():
 			x = pendulum.p[0] + noise_x
 			y = pendulum.p[1] + noise_y
 			canvas.draw_point(color.c, (x,y))
+
+class GenUtil():
+	"A class to join interesting functions for genuary..."
+
+	#Getting a random color based on time in rgb space...
+	def get_time_color(self):
+		t = tm.localtime()
+		r = t.tm_sec * 2
+		g = t.tm_min * 2
+		b = t.tm_hour * 5
+		return (r,g,b)
+
+	#Getting a random color based on time in rgba space...
+	def get_time_alpha_color(self, alpha):
+		t = tm.localtime()
+		r = t.tm_sec * 2
+		g = t.tm_min * 2
+		b = t.tm_hour * 5
+		return (r,g,b, alpha)
+
+	#Moving a color randomly in rgb color space...
+	def move_color(self, color, motion):
+		r = rd.randint(-motion,motion)
+		g = rd.randint(-motion,motion)
+		b = rd.randint(-motion,motion)
+		return ((color[0]+r)%255,(color[1]+g)%255,(color[2]+b)%255)
+
+	#A function to invert a color in rgb color space...
+	def invert_color(self, color):
+		return (255-color[0],255-color[1],255-color[2])
+
+	#Moving a color randomly in rgba color space...
+	def move_alpha_color(self, color, motion):
+		r = rd.randint(-motion,motion)
+		g = rd.randint(-motion,motion)
+		b = rd.randint(-motion,motion)
+		a = rd.randint(-motion,motion)
+		return ((color[0]+r)%255,(color[1]+g)%255,(color[2]+b)%255,(color[3]+a)%255)
+
+	#A function to invert a color in rgba color space...
+	def invert_alpha_color(self, color):
+		return (255-color[0],255-color[1], 255-color[2],255-color[3])
+
+	#Changing a color with control...
+	def color_grading(self, color, destiny, speed):
+		r = color[0] + round((destiny[0] - color[0]) * speed)
+		g = color[1] + round((destiny[0] - color[1]) * speed)
+		b = color[2] + round((destiny[0] - color[2]) * speed)
+		return (r,g,b)
+
+	#A function to get an image combining two images...
+	def mean_image(self, back_image, top_image, name):
+		back_image.convert("RGBA")
+		top_image.convert("RGBA").resize(back_image.size)
+		mask = im.new("L", back_image.size, 127)
+		new = im.composite(back_image, top_image, mask)
+		new.save(name + ".jpg")
+
+	#A function to paint a mask with an input image...
+	def mask_merge(self, background, top_image, name):
+		top_image.convert("RGBA")
+		mask = im.open(self.mask_path + rd.choice(self.input_mask_list)).convert("L").resize(top_image.size)
+		back_image = im.new("RGBA", top_image.size, background)
+		new = im.composite(back_image, top_image, mask)
+		new.save(name + ".jpg")
+
+	#The function to store the Image object in a byte stream...
+	def create_image(self, image):
+		file = BytesIO()
+		image.save(file, "jpeg", quality=85, optimize=True)
+		file.name = "random_creation.jpg"
+		file.seek(0)
+		return file
+
+	#A function to build a random signal...
+	def random_signal(self, base_frequency, base_amplitude, components):
+		signal = []
+		for c in range(components):
+			fq = rd.random() * base_frequency
+			a = base_amplitude / (c + 1)
+			fase = rd.random() * math.pi * 2
+			signal.append((fq, a, fase))
+		return signal
+
+	#A function to build a harmonic signal...
+	def harmonic_signal(self, base_frequency, base_amplitude, components):
+		signal = []
+		for c in range(components):
+			fq = base_frequency * (c + 1)
+			a = base_amplitude / (c + 1)
+			fase = rd.random() * math.pi * 2
+			signal.append((fq, a, fase))
+		return signal
+
+	#A function to draw a rectangle with rectangles...
+	def gen_rectangle(self, canvas, w, h, location, density, colors, color_motion, factors, size_factor, constant_size):
+		steps = [h / density[0], w / density[1]]
+		thinghw = [steps[1] * size_factor, steps[0] * size_factor]
+		color_count = len(colors)
+		active_color = rd.randint(0,color_count-1)
+		aux_size = thinghw
+		for i in range(density[0]):
+			active_color = (active_color+i)%color_count
+			c = colors[active_color]
+			if not constant_size:
+				aux_size = (aux_size[0] , (thinghw[1] + i%(4*steps[1])))
+			for j in range(density[1]):
+				x = location[1] + steps[1] / 2 + (j * factors[0])%density[1] * steps[1]
+				y = location[0] + steps[0] / 2 + (j * factors[1] + i * factors[0])%density[0] * steps[0]
+				center = (x, y)
+				if not constant_size:
+					aux_size = (thinghw[0] + j%(4*steps[0]), aux_size[1])
+				canvas.draw_rectangle(c, center, aux_size)
+				c = self.move_alpha_color(c, color_motion)
+			colors[active_color] = c
+
+class NCanvas():
+	"The canvas to draw with pixels for genuary..."
+
+	def __init__(self, width, height, background):
+		self.background = background
+		self.w = width
+		self.h = height
+		self.data = np.full((self.h, self.w, 3), self.background)
+
+	#Setting up pixels colors...
+	def paint_pixel(self, color, x, y, width):
+		for i in range(width):
+			self.paint_pixel(color, i+x, i+y)
+
+	#Setting up a pixel color...
+	def paint_pixel(self, color, x, y):
+		self.data[y][x] = color
+
+	#Function to save image...
+	def get_image(self):
+		data = np.array(np.round(self.data), dtype="uint8")
+		image = im.fromarray(data)
+		return image
+
+	#Function to show image...
+	def show(self):
+		data = np.array(np.round(self.data), dtype="uint8")
+		image = im.fromarray(data)
+		image.show()
+
+class DCanvas():
+	"The canvas to draw with Pillow for genuary..."
+
+	def __init__(self, width, height, background):
+		self.background = background
+		self.hw = [height,width]
+		self.c = (self.hw[0]/2, self.hw[1]/2)
+		self.canvas = im.new("RGB",(self.hw[1], self.hw[0]),self.background)
+		self.draw = idraw.Draw(self.canvas)
+
+	#Function to draw a point...
+	def draw_point(self, c, p):
+		self.draw.point(p, fill=c)
+
+	#Function to draw a line...
+	def draw_line(self, c, w, a, b):
+		self.draw.line([a,b], fill=c, width=w)
+
+	#Function to draw a circle...
+	def draw_circle(self, color, c, d):
+		a = (c[0] - d/2, c[1] - d/2)
+		b = (c[0] + d/2, c[1] + d/2)
+		self.draw.ellipse([a,b], fill=color, outline=None)
+
+	#Function to draw a rectangle...
+	def draw_rectangle(self, color, center, size):
+		a = (center[0] - size[0]/2, center[1] - size[1] / 2)
+		b = (a[0] + size[0], a[1] + size[1])
+		self.draw.rectangle([a,b], fill=color, outline=None)
+
+	#Function to draw a rounded rectangle...
+	def draw_rounded_rectangle(self, color, center, size, r):
+		a = (center[0] - size[0]/2, center[1] - size[1] / 2)
+		b = (a[0] + size[0], a[1] + size[1])
+		self.draw.rounded_rectangle([a,b], radius=r, fill=color, outline=None)
+
+	#Function to write a message...
+	def write(self, x, y, cell, message, font, color):
+		self.draw.text((x,y), message, anchor="mm", font=font, fill=color)
+
+	#Function to save the drawing...
+	def save(self, filepath, filename):
+		self.canvas.save(filepath + filename + ".jpg")
+
+class GenColor():
+	"A class to creat a living color..."
+
+	def __init__(self, color):
+		self.o = color
+		self.c = color
+		self.d = [1,1,1]
+
+	#Moving a color randomly in rgb color space...
+	def move(self, motion):
+		r = (self.c[0] + rd.randint(-motion,motion))%255
+		g = (self.c[1] + rd.randint(-motion,motion))%255
+		b = (self.c[2] + rd.randint(-motion,motion))%255
+		self.c = (r,g,b)
+
+	#Moving a color in its direction...
+	def translate(self, motion):
+		self.check_directions(motion)
+		r = self.c[0] + motion * self.d[0]
+		g = self.c[1] + motion * self.d[1]
+		b = self.c[2] + motion * self.d[2]
+		self.c = (r,g,b)
+
+	#Moving a color without stopping...
+	def overflow(self, motion):
+		r = (self.c[0] + motion * self.d[0])%255
+		g = (self.c[1] + motion * self.d[1])%255
+		b = (self.c[2] + motion * self.d[2])%255
+		self.c = (r,g,b)
+
+	#Moving a color without stopping independtly...
+	def independent_overflow(self, motion):
+		r = (self.c[0] + motion[0] * self.d[0])%255
+		g = (self.c[1] + motion[1] * self.d[1])%255
+		b = (self.c[2] + motion[2] * self.d[2])%255
+		self.c = (r,g,b)
+
+	#Getting close to another color...
+	def getting_close(self, the_other_color):
+		r = self.c[0] + (the_other_color[0] - self.c[0]) // 8
+		g = self.c[1] + (the_other_color[1] - self.c[1]) // 8
+		b = self.c[2] + (the_other_color[2] - self.c[2]) // 8
+		self.c = (r,g,b)
+
+	#Checking if it is posible to move...
+	def check_directions(self, motion):
+		for d in range(len(self.d)):
+			v = self.c[d] + motion
+			if self.c[d] < 0 or self.c[d] > 255:
+				self.d[d] = self.d[d] * -1
+
+	#A function to invert the color in rgb color space...
+	def invert(self):
+		self.c = (255-self.c[0],255-self.c[1],255-self.c[2])
+
+	#Changing a color with control...
+	def degrade(self, destiny, speed):
+		r = self.c[0] + round((destiny[0] - self.c[0]) * speed)
+		g = self.c[1] + round((destiny[0] - self.c[1]) * speed)
+		b = self.c[2] + round((destiny[0] - self.c[2]) * speed)
+		self.c = (r,g,b)
+
+	#Reseting to original color...
+	def reset(self):
+		self.c = self.o
+
+class GenPendulum():
+	"A class to move a pendulum..."
+
+	def __init__(self, center, initial_position, initial_velocity, g_constant, degrades, degrade_step):
+		self.c = np.array(center)
+		self.p = np.array(initial_position)
+		self.s = np.array(initial_velocity)
+		self.a = np.array([0.0,0.0])
+		self.m = 1.0
+		self.g = g_constant #the famous G constant...
+		self.degrades = degrades #taking into account the loose of mass...
+		self.degrade_step = degrade_step #mass lost in each update...
+
+	def update(self):
+		self.update_acceleration()
+		self.update_speed()
+		self.p += self.s
+
+	def update_acceleration(self):
+		difference = self.c - self.p
+		magnitude = self.get_sq_magnitude(difference)
+		if self.degrades:
+			magnitude = self.friction(magnitude)
+		self.a = self.set_vector(difference, magnitude)
+
+	def update_speed(self):
+		self.s += self.a
+
+	def friction(self, magnitude):
+		if self.m > 0.5:
+			self.m -= self.degrade_step
+		self.s = self.s * self.m
+		return magnitude * self.m
+
+	def get_sq_magnitude(self, vector):
+		m = self.g / (vector[0]*vector[0] + vector[1]*vector[1])
+		if m < 0.1:
+			m = 0.1
+		elif m > 8:
+			m = 8
+		return m
+
+	def set_vector(self, difference, magnitude):
+		a = self.get_unit_vector(difference)
+		a[0] = a[0] * magnitude
+		a[1] = a[1] * magnitude
+		return a
+
+	def get_unit_vector(self, vector):
+		v = np.array([0.0,0.0])
+		v[0] = (vector[0] / (abs(vector[0]) + abs(vector[1])))
+		v[1] = (vector[1] / (abs(vector[0]) + abs(vector[1])))
+		return v
+
+class GenPixel():
+	"A class to work with an interesting pixel..."
+
+	def __init__(self, x, y, background):
+		self.x = x
+		self.y = y
+		self.c = background
+		self.is_infected = False
+		self.is_immune = False
+		self.infection_evol = None
+		self.infection_end = None
+
+	def infection(self, virus):
+		if self.is_infected == False and self.is_immune == False:
+			self.infection_evol = 0
+			self.c = virus.color
+			self.is_infected = True
+			self.infection_end = virus.duration
+
+	def update(self):
+		self.infection_evol += 1
+		if self.infection_evol > self.infection_end:
+			self.is_infected = False
+			self.is_immune = True
+
+class GenVirus():
+	"A class to infect pixels..."
+
+	def __init__(self, color, contacts, threshold, mutation_cycle, duration):
+		self.color = color
+		self.contacts = contacts
+		self.threshold = threshold
+		self.mutation_cycle = mutation_cycle
+		self.last_mutation = 0
+		self.age = 0
+		self.duration = duration
+
+	def update(self):
+		self.age += 1
+		if self.age - self.last_mutation > self.mutation_cycle:
+			self.threshold = self.threshold + rd.random() / 200
+			self.color = ut.move_color(self.color, 15)
+			self.last_mutation = self.age
+
+ut = GenUtil()

@@ -8,7 +8,7 @@ from messages import Messages
 from assets import Assets
 from text import Text
 from image import Image
-from genuary import Genuary
+from gen import Genuary
 from interaction import Interaction
 from myrandom import MyRandom
 
@@ -421,7 +421,7 @@ def main():
 		logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 	updater = Updater(config["token"], request_kwargs={'read_timeout': 5, 'connect_timeout': 5})
 	dp = updater.dispatcher
-	dp.add_error_handler(error_notification)
+	#dp.add_error_handler(error_notification)
 	dp.add_handler(build_conversation_handler(), group=1)
 	dp.add_handler(MessageHandler(Filters.text & ~Filters.command, wrong_message), group=1)
 	dp.add_handler(CommandHandler("start", start), group=2)
