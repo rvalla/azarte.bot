@@ -67,15 +67,17 @@ class MessageCurve():
 	#Building the curve of scale 1...
 	def build_points(self, message):
 		last_point = (0,0)
+		angle = 0
 		for l in range(len(message)):
 			o = ord(message[l])
 			n = (o-32)%self.module
-			p = self.get_new_point(last_point, self.base_angle * n)
+			angle += self.base_angle * (n + 1)
+			p = self.get_new_point(last_point, angle)
 			self.points.append(p)
 			self.update_limits(p)
 			last_point = p
-			if o == 0 or o == 9 or o == 10:
-				self.blanks.add(l)
+			if o == 32 or o == 9 or o == 10:
+				self.blanks.add(l + 1)
 
 	#A new point...
 	def get_new_point(self, last_point, angle):
