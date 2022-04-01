@@ -344,21 +344,6 @@ def get_language(id):
 	else:
 		return 0
 
-#Saving usage data...
-def reload(update, context):
-	id = update.effective_chat.id
-	m = update.message.text.split(" ")
-	if len(m) > 1 and m[1] == config["password"]:
-		import genuary
-		iplib.reload(genuary)
-		from genuary import Genuary
-		global gny
-		gny = Genuary()
-		context.bot.send_message(chat_id=id, text="El bot actualizó correctamente...", parse_mode=ParseMode.HTML)
-	else:
-		logging.info(hide_id(id) + " wanted to reload bot utilities...")
-		context.bot.send_message(chat_id=id, text=msg.get_message("intruder"), parse_mode=ParseMode.HTML)
-
 #Sending usage data...
 def bot_usage(update, context):
 	id = update.effective_chat.id
@@ -367,7 +352,7 @@ def bot_usage(update, context):
 		m = us.build_usage_message()
 		context.bot.send_message(chat_id=id, text=m, parse_mode=ParseMode.HTML)
 	else:
-		logging.info(hide_id(id) + " wanted to check a game round state...")
+		logging.info(hide_id(id) + " wanted to check bot usage data...")
 		context.bot.send_message(chat_id=id, text=msg.get_message("intruder"), parse_mode=ParseMode.HTML)
 
 #Saving usage data...
@@ -378,7 +363,7 @@ def save_usage(update, context):
 		us.save_usage()
 		context.bot.send_message(chat_id=id, text="Datos guardados...", parse_mode=ParseMode.HTML)
 	else:
-		logging.info(hide_id(id) + " wanted to check a game round state...")
+		logging.info(hide_id(id) + " wanted to save bot usage data...")
 		context.bot.send_message(chat_id=id, text=msg.get_message("intruder"), parse_mode=ParseMode.HTML)
 
 #Function to print file ids from audios...
@@ -435,7 +420,6 @@ def main():
 	dp.add_handler(CommandHandler("language", select_language), group=2)
 	dp.add_handler(CommandHandler("help", print_help), group=2)
 	dp.add_handler(CallbackQueryHandler(button_click), group=2)
-	dp.add_handler(CommandHandler("reload", reload), group=2)
 	dp.add_handler(CommandHandler("botusage", bot_usage), group=2)
 	dp.add_handler(CommandHandler("saveusage", save_usage), group=2)
 	#dp.add_handler(MessageHandler(Filters.video & ~Filters.command, print_video_id))

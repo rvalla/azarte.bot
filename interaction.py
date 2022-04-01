@@ -16,7 +16,7 @@ class Interaction():
 
 	#Creating a curve from text...
 	def build_message_curve(self, message):
-		curve = MessageCurve(message, self.w, self.background)
+		curve = MessageCurve(message, self.w)
 		canvas = im.new("RGB",(self.w, self.h), self.background)
 		draw = idraw.Draw(canvas)
 		last_point = curve.get_point(0)
@@ -38,7 +38,7 @@ class MessageCurve():
 	"The class the bot uses to create curves with a message..."
 
 	#Building the curve...
-	def __init__(self, message, size, background):
+	def __init__(self, message, size):
 		self.s = size
 		self.length = len(message) + 1
 		self.limits = [[0,0.01],[0,0.01]]
@@ -113,9 +113,9 @@ class MessageCurve():
 	#Deciding line width...
 	def set_line_width(self, length):
 		if length < 10:
-			return 10
+			return 13
 		else:
-			return round(1 * 10 / (length / 10)) + 2
+			return round(13 / (length / 10)) + 3
 
 	#Deciding color...
 	def set_color(self, message):
