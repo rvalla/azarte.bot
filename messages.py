@@ -24,7 +24,7 @@ class Messages():
 		else:
 			return rd.choice(self.replies_es)
 
-	#Formatin a score message...
+	#Formating a score message...
 	def build_score_message(self, data, l):
 		m = "<b>" + data[0] + "</b>\n"
 		if l == 0:
@@ -32,6 +32,27 @@ class Messages():
 		else:
 			m += "Materials needed: " + data[1] + "\n\n"
 		m += "<i>" + data[2] + "</i>"
+		return m
+
+	#Building a chess portrait message...
+	def build_chessportrait_message(self, game_data, l):
+		m = ""
+		if l == 1:
+			m += "I decided to use a game in which <b>"
+			m += game_data[0].split(",")[0]
+			m += "</b> faced <b>"
+			m += game_data[1].split(",")[0]
+			m += "</b> ("
+			m += game_data[3]
+			m += ")."
+		else:
+			m += "Decidí usar una partida en la que <b>"
+			m += game_data[0].split(",")[0]
+			m += "</b> enfrentó a <b>"
+			m += game_data[1].split(",")[0]
+			m += "</b> ("
+			m += game_data[3]
+			m += ")."
 		return m
 
 	#Building #genuary messages...

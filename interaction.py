@@ -2,6 +2,7 @@ import os
 from io import BytesIO
 import math
 import random as rd
+import numpy as np
 import time as tm
 from PIL import Image as im, ImageDraw as idraw
 
@@ -26,13 +27,74 @@ class Interaction():
 			last_point = point
 		return self.create_image(canvas)
 
+	#Creating a chess portrait from an image...
+	def build_chess_portrait(self, image_name):
+		image = im.open(image_name).resize((1080, 1080))
+		portrait = ChessPortrait(1080, 135, image)
+		image = im.fromarray(np.array(np.round(portrait.portrait), dtype="uint8"))
+		return portrait.game_data, self.create_image(image)
+
 	#The function to store the Image object in a byte stream...
 	def create_image(self, image):
 		file = BytesIO()
 		image.save(file, "jpeg", quality=85, optimize=True)
-		file.name = "random_creation.jpg"
+		file.name = "interaction_creation.jpg"
 		file.seek(0)
 		return file
+
+class ChessPortrait():
+	"The class the bot uses to create a chess portrait..."
+
+	#Creating a chess portrait...
+	def __init__(self, size, sq_size, image):
+		self.game_data = rd.choice(open("assets/chess_heatmaps.csv").readlines()[1:])
+		self.input_image = np.array(image)
+		self.portrait = np.full((size, size, 3), (0,0,0))
+		self.noise_width = rd.randint(25,90)
+		self.sq_size = sq_size
+		self.size = size
+		self.heatmap = self.get_float_list(self.game_data.split(";")[4])
+		self.paint_output()
+
+	def paint_output(self):
+		for s in range(64):
+			c, f = divmod(s, 8)
+			negative = self.check_negative(c, f)
+			start_x = self.sq_size * c
+			start_y = self.sq_size * (7 - f) #To iterate following the heatmap squares order...
+			for i in range(self.sq_size):
+				for j in range(self.sq_size):
+					x = start_x + i
+					y = start_y + j
+					if negative:
+						pixel = self.get_pixel(self.get_inverted_pixel(self.input_image[x][y]), self.heatmap[s])
+					else:
+						pixel = self.get_pixel(self.input_image[x][y], self.heatmap[s])
+					self.portrait[x][y] = pixel
+
+	def get_pixel(self, color, sq_weight):
+		r = color[0] - round(rd.randint(0,self.noise_width) * sq_weight)
+		g = color[1] - round(rd.randint(0,self.noise_width) * sq_weight)
+		b = color[2] - round(rd.randint(0,self.noise_width) * sq_weight)
+		return (r, g, b)
+
+	def get_inverted_pixel(self, color):
+		r = 255 - color[0]
+		g = 255 - color[1]
+		b = 255 - color[2]
+		return (r,g,b)
+
+	def check_negative(self, c, f):
+		if (c + f)%2 == 0:
+			return True
+		else:
+			return False
+
+	def get_float_list(self, source):
+		ls = []
+		for v in source.split(","):
+			ls.append(float(v))
+		return ls
 
 class MessageCurve():
 	"The class the bot uses to create curves with a message..."

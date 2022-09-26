@@ -19,6 +19,7 @@ Here you can see the list of available commands. Some of them allow you to pass 
 - **/color**: starts the visual alternatives.
 - **/text**: starts the textual alternatives.  
 - **/noise**: starts the auditive alternatives.  
+- **/interaction**: the bot creates from something you send.
 - **/genuary**: the command to enter the artificially generated month of time where we build code that makes beautiful things.  
 - **/number (f)**: returns a random number rolling a dice with *f* faces.  
 - **/sequence (f) (n)**: returns a random sequence of *n* numbers rolling a dice with *f* faces.  

@@ -2,6 +2,10 @@
 
 # azarte: telegram bot changelog
 
+## 2022-09-25: v0.6 beta
+
+Adding support for image messages in **/interaction** command.
+
 ## 2022-02-08: v0.5 beta
 
 Adding new days for **#genuary**. Adding new *random replies*. New **conversation handler** to allow new

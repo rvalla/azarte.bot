@@ -30,6 +30,7 @@
 	"start_interaction": "Send me something, I am ready to create with it.",
 	"wrong_interaction": "I still don't know what to do with this type of message.",
 	"text_interaction": "I will transform the text from your message into a line.",
+	"img_interaction": "I will transform your image using data from a chess game. Give me some time!",
 	"end_interaction": "I canceled our interaction.",
 	"genuary_0": "I still don't know what to do for today's prompt.",
 	"genuary_1": "<b>Genuary 2022 day 1</b>: Draw 10.000 of something.",

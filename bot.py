@@ -125,6 +125,19 @@ def text_interaction(update, context):
 	context.bot.send_chat_action(chat_id=id, action="UPLOAD_PHOTO")
 	image_request(update, context, id, ion.build_message_curve(m))
 
+#Ejecuting an image interaction...
+def img_interaction(update, context):
+	id = update.effective_chat.id
+	photo_name = "temp/" + hide_id(id) + "imgint.jpg"
+	photo = update.message.photo[-1].get_file()
+	photo.download(photo_name)
+	us.add_interaction(1)
+	context.bot.send_message(chat_id=id, text=msg.get_message("img_interaction", get_language(id)), parse_mode=ParseMode.HTML)
+	data, image = ion.build_chess_portrait(photo_name)
+	context.bot.send_message(chat_id=id, text=msg.build_chessportrait_message(data.split(";"), get_language(id)), parse_mode=ParseMode.HTML)
+	context.bot.send_chat_action(chat_id=id, action="UPLOAD_PHOTO")
+	image_request(update, context, id, image)
+
 #Canceling the challenge without offering another one...
 def wrong_interaction(update, context):
 	id = update.effective_chat.id
@@ -388,7 +401,7 @@ def build_conversation_handler():
 	handler = ConversationHandler(
 		entry_points=[CommandHandler("interaction", start_interaction)],
 		states={WAITING: [MessageHandler(Filters.text & ~Filters.command, text_interaction),
-						MessageHandler(Filters.photo, wrong_interaction),
+						MessageHandler(Filters.photo, img_interaction),
 						MessageHandler(Filters.voice, wrong_interaction),
 						MessageHandler(Filters.video, wrong_interaction)]},
 				fallbacks=[MessageHandler(Filters.command, cancel_interaction)],
@@ -406,7 +419,7 @@ def main():
 		logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 	updater = Updater(config["token"], request_kwargs={'read_timeout': 5, 'connect_timeout': 5})
 	dp = updater.dispatcher
-	dp.add_error_handler(error_notification)
+	#dp.add_error_handler(error_notification)
 	dp.add_handler(build_conversation_handler(), group=1)
 	dp.add_handler(MessageHandler(Filters.text & ~Filters.command, wrong_message), group=1)
 	dp.add_handler(CommandHandler("start", start), group=2)

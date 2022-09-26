@@ -30,6 +30,7 @@
 	"start_interaction": "Estoy listo para crear algo a partir de un mensaje tuyo. ¡Mandame algo!",
 	"wrong_interaction": "Todavía no sé que hacer con este tipo de mensaje. ¡Mil disculpas!",
 	"text_interaction": "Voy a transformar el texto de tu mensaje en una línea.",
+	"img_interaction": "Voy a alterar la imagen usando una partida de ajedrez. ¡Necesito algo de tiempo!",
 	"end_interaction": "Doy por terminada nuestra interacción.",
 	"genuary_0": "Todavía no sé qué hacer con la propuesta de hoy.",
 	"genuary_1": "<b>Genuary 2022 día 1</b>: Dibujá 10.000 de algo.",
