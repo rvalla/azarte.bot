@@ -86,7 +86,7 @@ class ChessPortrait():
 		return (r,g,b)
 
 	def check_negative(self, c, f):
-		if (c + f)%2 == 0:
+		if (c + f)%2 == self.first_sq:
 			return True
 		else:
 			return False
