@@ -28,8 +28,8 @@ class Interaction():
 		return self.create_image(canvas)
 
 	#Creating a chess portrait from an image...
-	def build_chess_portrait(self, image_name):
-		image = im.open(image_name).resize((1080, 1080))
+	def build_chess_portrait(self, image_bytes):
+		image = im.open(BytesIO(image_bytes)).resize((1080, 1080))
 		portrait = ChessPortrait(1080, 135, image)
 		image = im.fromarray(np.array(np.round(portrait.portrait), dtype="uint8"))
 		return portrait.game_data, self.create_image(image)
@@ -52,6 +52,7 @@ class ChessPortrait():
 		self.portrait = np.full((size, size, 3), (0,0,0))
 		self.noise_width = rd.randint(25,90)
 		self.sq_size = sq_size
+		self.first_sq = self.is_first_square_negative() #0 if false, 1 if true
 		self.size = size
 		self.heatmap = self.get_float_list(self.game_data.split(";")[4])
 		self.paint_output()
@@ -89,6 +90,25 @@ class ChessPortrait():
 			return True
 		else:
 			return False
+
+	#To decide if the first square is negative (to match a real chessboard)
+	def is_first_square_negative(self):
+		lightness = self.get_lightness_average()
+		if lightness < 128:
+			return 1
+		else:
+			return 0
+
+	def get_lightness_average(self):
+		pixels = self.sq_size * self.sq_size
+		lightness = 0
+		for f in range(self.sq_size):
+			for c in range(self.sq_size):
+				r = int(self.input_image[f][c][0])
+				g = int(self.input_image[f][c][1])
+				b = int(self.input_image[f][c][2])
+				lightness += (r + g + b) / 3
+		return lightness / pixels
 
 	def get_float_list(self, source):
 		ls = []

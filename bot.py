@@ -128,12 +128,10 @@ def text_interaction(update, context):
 #Ejecuting an image interaction...
 def img_interaction(update, context):
 	id = update.effective_chat.id
-	photo_name = "temp/" + hide_id(id) + "imgint.jpg"
 	photo = update.message.photo[-1].get_file()
-	photo.download(photo_name)
 	us.add_interaction(1)
 	context.bot.send_message(chat_id=id, text=msg.get_message("img_interaction", get_language(id)), parse_mode=ParseMode.HTML)
-	data, image = ion.build_chess_portrait(photo_name)
+	data, image = ion.build_chess_portrait(photo.download_as_bytearray())
 	context.bot.send_message(chat_id=id, text=msg.build_chessportrait_message(data.split(";"), get_language(id)), parse_mode=ParseMode.HTML)
 	context.bot.send_chat_action(chat_id=id, action="UPLOAD_PHOTO")
 	image_request(update, context, id, image)
