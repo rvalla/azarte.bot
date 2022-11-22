@@ -2,6 +2,10 @@
 
 # azarte: telegram bot changelog
 
+## 2022-11-21: v0.7 beta
+
+Adding new */qatar* command to play with predictions for Fifa World Cup matches.  
+
 ## 2022-09-25: v0.6 beta
 
 Adding support for image messages in **/interaction** command.

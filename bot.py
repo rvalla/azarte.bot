@@ -213,6 +213,19 @@ def random_choice(update, context):
 		context.bot.send_message(chat_id=id, text=msg.get_message("empty", get_language(id)), parse_mode=ParseMode.HTML)
 		us.add_choice(False)
 
+#Selecting a word from the message for the user...
+def qatar(update, context):
+	in_m = update.message.text.split(" ")
+	id = update.effective_chat.id
+	try:
+		game, comment = mrd.worldcup_match(get_language(id), in_m[1], in_m[2])
+		context.bot.send_message(chat_id=id, text=game, parse_mode=ParseMode.HTML)
+		context.bot.send_message(chat_id=id, text=comment, parse_mode=ParseMode.HTML)
+		us.add_qatar(True)
+	except:
+		context.bot.send_message(chat_id=id, text=msg.get_message("qatar_error", get_language(id)), parse_mode=ParseMode.HTML)
+		us.add_qatar(False)
+
 #Triggering /help command...
 def print_help(update, context):
 	id = update.effective_chat.id
@@ -417,7 +430,7 @@ def main():
 		logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 	updater = Updater(config["token"], request_kwargs={'read_timeout': 5, 'connect_timeout': 5})
 	dp = updater.dispatcher
-	#dp.add_error_handler(error_notification)
+	dp.add_error_handler(error_notification)
 	dp.add_handler(build_conversation_handler(), group=1)
 	dp.add_handler(MessageHandler(Filters.text & ~Filters.command, wrong_message), group=1)
 	dp.add_handler(CommandHandler("start", start), group=2)
@@ -428,6 +441,7 @@ def main():
 	dp.add_handler(CommandHandler("number", random_number), group=2)
 	dp.add_handler(CommandHandler("sequence", random_sequence), group=2)
 	dp.add_handler(CommandHandler("choice", random_choice), group=2)
+	dp.add_handler(CommandHandler("qatar", qatar), group=2)
 	dp.add_handler(CommandHandler("language", select_language), group=2)
 	dp.add_handler(CommandHandler("help", print_help), group=2)
 	dp.add_handler(CallbackQueryHandler(button_click), group=2)

@@ -19,6 +19,7 @@ class Usage():
 		self.number = 0
 		self.sequence = 0
 		self.choice = [0,0] #success, empty...
+		self.qatar = [0,0] #success, error...
 		self.language = [0,0] #spanish, english...
 		self.help = 0
 		self.wrong_message = 0
@@ -36,6 +37,7 @@ class Usage():
 			"number: " + str(self.number) + "\n" + \
 			"sequence: " + str(self.sequence) + "\n" + \
 			"choice: " + str(self.choice) + "\n" + \
+			"qatar: " + str(self.qatar) + "\n" + \
 			"language: " + str(self.language) + "\n" + \
 			"help: " + str(self.help) + "\n" + \
 			"wrong_message: " + str(self.wrong_message) + "\n" \
@@ -67,6 +69,7 @@ class Usage():
 		line += str(self.number) + ";"
 		line += str(self.sequence) + ";"
 		line += str(self.choice) + ";"
+		line += str(self.qatar) + ";"
 		line += str(self.language) + ";"
 		line += str(self.help) + ";"
 		line += str(self.wrong_message) + ";"
@@ -111,6 +114,13 @@ class Usage():
 			self.choice[0] += 1
 		else:
 			self.choice[1] += 1
+
+	#Registering a new qatar...
+	def add_qatar(self, success):
+		if success:
+			self.qatar[0] += 1
+		else:
+			self.qatar[1] += 1
 
 	#Registering a new language...
 	def add_language(self, l):
