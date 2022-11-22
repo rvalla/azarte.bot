@@ -19,7 +19,7 @@
 	"number": "Tiré un dado y salió: ",
 	"choice": "Me quedo con: ",
 	"empty": "Buen intento. Pero no es posible elegir un elemento del conjunto vacío.",
-	"qatar_error": "No puedo hacer nada con eso. Necesito que me mandes el comando seguido de dos equipos de fútbol (de los clasificados para el mundial).",
+	"qatar_error": "No puedo hacer nada con eso. Necesito que me mandes el comando seguido de dos equipos de fútbol separados por un espacio (de los clasificados para el mundial).",
 	"patience": "¡Paciencia! Necesito hacer algunos cálculos...",
 	"error": "Algo salió mal... ¡Qué vergüenza!",
 	"language": "¿Qué idioma querés que use?",

@@ -21,9 +21,10 @@ Here you can see the list of available commands. Some of them allow you to pass 
 - **/noise**: starts the auditive alternatives.  
 - **/interaction**: the bot creates from something you send.
 - **/genuary**: the command to enter the artificially generated month of time where we build code that makes beautiful things.  
-- **/number (f)**: returns a random number rolling a dice with *f* faces.  
-- **/sequence (f) (n)**: returns a random sequence of *n* numbers rolling a dice with *f* faces.  
+- **/number f**: returns a random number rolling a dice with *f* faces.  
+- **/sequence f n**: returns a random sequence of *n* numbers rolling a dice with *f* faces.  
 - **/choice a b c**: returns a random word from your message.
+- **/qatar teama teamb**: the bot propose a result for a football match.  
 - **/language**: to set the bot language, Spanish (default) or English.
 - **/help**: returns a link to bring you here.  
 

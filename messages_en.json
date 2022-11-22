@@ -19,7 +19,7 @@
 	"number": "I rolled a dice and got: ",
 	"choice": "I choose: ",
 	"empty": "Nice try. But it is not possible to choose an element from the empty set.",
-	"qatar_error": "I can't do anything with this message. I need you to send the command follow by two football teams (that have qualified for the tournament).",
+	"qatar_error": "I can't do anything with this message. I need you to send the command follow by two football teams separated by a space (that have qualified for the tournament).",
 	"patience": "Be patient! I have to do some calculations...",
 	"error": "Something went wrong... I am so sorry!",
 	"language": "Please, select your prefered language.",

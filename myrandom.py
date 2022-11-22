@@ -26,13 +26,13 @@ class FifaWC():
 	teams_code = {"qatar": "QAT", "catar": "QAT",
 					"ecuador": "ECU",
 					"senegal": "SEN",
-					"netherlands": "NED", "paises bajos": "NED", "países bajos": "NED", "holanda": "NED",
+					"netherlands": "NED", "paisesbajos": "NED", "paísesbajos": "NED", "holanda": "NED",
 					"england": "ENG", "inglaterra": "ENG",
 					"iran": "IRN", "irán": "IRN",
-					"usa": "USA", "eeuu": "USA", "estados unidos": "USA", "estados unidos de américa": "USA",
+					"usa": "USA", "eeuu": "USA", "estadosunidos": "USA",
 					"wales": "WAL", "gales": "WAL",
 					"argentina": "ARG",
-					"saudi arabia": "KSA", "arabia saudita": "KSA", "arabia": "KSA",
+					"saudiarabia": "KSA", "arabiasaudita": "KSA", "arabia": "KSA",
 					"mexico": "MEX", "méxico": "MEX", "méjico": "MEX",
 					"poland": "POL", "polonia": "POL",
 					"france": "FRA", "francia": "FRA",
@@ -40,7 +40,7 @@ class FifaWC():
 					"denmark": "DEN", "dinamarca": "DEN",
 					"tunisia": "TUN", "túnez": "TUN", "tunez": "TUN",
 					"spain": "ESP", "españa": "ESP",
-					"costa rica": "CRC",
+					"costarica": "CRC",
 					"germany": "GER", "alemania": "GER",
 					"japan": "JPN", "japón": "JPN", "japon": "JPN",
 					"belgium": "BEL", "bélgica": "BEL", "belgica": "BEL",
@@ -54,7 +54,7 @@ class FifaWC():
 					"portugal": "POR",
 					"ghana": "GHA", "gana": "GHA",
 					"uruguay": "URU",
-					"korea": "KOR", "corea": "KOR", "corea del sur": "KOR"
+					"korea": "KOR", "corea": "KOR", "coreadelsur": "KOR"
 				}
 
 	def __init__(self):
