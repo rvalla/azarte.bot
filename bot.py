@@ -377,7 +377,7 @@ def bot_usage(update, context):
 		context.bot.send_message(chat_id=id, text=m, parse_mode=ParseMode.HTML)
 	else:
 		logging.info(hide_id(id) + " wanted to check bot usage data...")
-		context.bot.send_message(chat_id=id, text=msg.get_message("intruder"), parse_mode=ParseMode.HTML)
+		context.bot.send_message(chat_id=id, text=msg.get_message("intruder", get_language(id)), parse_mode=ParseMode.HTML)
 
 #Saving usage data...
 def save_usage(update, context):
@@ -388,7 +388,7 @@ def save_usage(update, context):
 		context.bot.send_message(chat_id=id, text="Datos guardados...", parse_mode=ParseMode.HTML)
 	else:
 		logging.info(hide_id(id) + " wanted to save bot usage data...")
-		context.bot.send_message(chat_id=id, text=msg.get_message("intruder"), parse_mode=ParseMode.HTML)
+		context.bot.send_message(chat_id=id, text=msg.get_message("intruder", get_language(id)), parse_mode=ParseMode.HTML)
 
 #Function to print file ids from audios...
 def print_audio_id(update, context):
@@ -430,7 +430,7 @@ def main():
 		logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 	updater = Updater(config["token"], request_kwargs={'read_timeout': 5, 'connect_timeout': 5})
 	dp = updater.dispatcher
-	dp.add_error_handler(error_notification)
+#	dp.add_error_handler(error_notification)
 	dp.add_handler(build_conversation_handler(), group=1)
 	dp.add_handler(MessageHandler(Filters.text & ~Filters.command, wrong_message), group=1)
 	dp.add_handler(CommandHandler("start", start), group=2)
