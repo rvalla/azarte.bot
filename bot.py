@@ -236,6 +236,7 @@ def print_help(update, context):
 #Advicing user not to chat with a bot...
 def wrong_message(update, context):
 	id = update.effective_chat.id
+	print(update.message.text)
 	if update.message.reply_to_message == None:
 		context.bot.send_message(chat_id=id, text=msg.get_message("wrong_message", get_language(id)), parse_mode=ParseMode.HTML)
 	else:
@@ -390,6 +391,17 @@ def save_usage(update, context):
 		logging.info(hide_id(id) + " wanted to save bot usage data...")
 		context.bot.send_message(chat_id=id, text=msg.get_message("intruder", get_language(id)), parse_mode=ParseMode.HTML)
 
+#Secret command for debugging...
+def debug_function(update, context):
+	id = update.effective_chat.id
+	m = update.message.text.split(" ")
+	if len(m) > 1 and m[1] == config["password"]:
+		message = mrd.worldcup_test()
+		context.bot.send_message(chat_id=id, text=message, parse_mode=ParseMode.HTML)
+	else:
+		logging.info(hide_id(id) + " wanted to run bot secret debug command...")
+		context.bot.send_message(chat_id=id, text=msg.get_message("intruder", get_language(id)), parse_mode=ParseMode.HTML)
+
 #Function to print file ids from audios...
 def print_audio_id(update, context):
 	print(update.message.audio["file_id"])
@@ -430,7 +442,7 @@ def main():
 		logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 	updater = Updater(config["token"], request_kwargs={'read_timeout': 5, 'connect_timeout': 5})
 	dp = updater.dispatcher
-#	dp.add_error_handler(error_notification)
+	dp.add_error_handler(error_notification)
 	dp.add_handler(build_conversation_handler(), group=1)
 	dp.add_handler(MessageHandler(Filters.text & ~Filters.command, wrong_message), group=1)
 	dp.add_handler(CommandHandler("start", start), group=2)
@@ -447,6 +459,7 @@ def main():
 	dp.add_handler(CallbackQueryHandler(button_click), group=2)
 	dp.add_handler(CommandHandler("botusage", bot_usage), group=2)
 	dp.add_handler(CommandHandler("saveusage", save_usage), group=2)
+	dp.add_handler(CommandHandler("debug", debug_function), group=2)
 	#dp.add_handler(MessageHandler(Filters.video & ~Filters.command, print_video_id))
 	dp.bot.send_message(chat_id=config["admin_id"], text="The bot is starting!", parse_mode=ParseMode.HTML)
 	if config["webhook"]:

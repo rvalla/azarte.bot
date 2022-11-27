@@ -19,6 +19,9 @@ class MyRandom():
 
 	def worldcup_match(self, l, home, visiting):
 		return self.wc.match(l, home, visiting)
+	
+	def worldcup_test(self):
+		return self.wc.list_teams()
 
 class FifaWC():
 	"The class to guess the result of Fifa World Cup matches..."
@@ -74,7 +77,7 @@ class FifaWC():
 			result, score = self.decide_match(self.look_for_team(team_a_c), self.look_for_team(team_b_c))
 			return self.build_message(l, score, team_a, team_b)
 		else:
-			return "<b>#$%%()@-|!*^{}</b>", self.build_null_message(l, home, visiting)
+			return "<b>&$%(/)?&)/&$%$%!_-$</b>", self.build_null_message(l, home, visiting)
 
 	def decide_match(self, team_a, team_b):
 		score = [self.decide_attacks(team_a, team_b), self.decide_attacks(team_b, team_a)]
@@ -88,11 +91,11 @@ class FifaWC():
 	def build_match_result(self, l, score, team_a, team_b):
 		m = ""
 		if l == 1:
-			m = "<b>" + team_a.en_name + " " + str(score[0]) + " - "
-			m += team_b.en_name + " " + str(score[1]) + "</b>"
+			m = team_a.flag + " <b>" + team_a.en_name + " " + str(score[0]) + " - "
+			m += team_b.flag + " " + team_b.en_name + " " + str(score[1]) + "</b>"
 		else:
-			m = "<b>" + team_a.es_name + " " + str(score[0]) + " - "
-			m += team_b.es_name + " " + str(score[1]) + "</b>"
+			m = team_a.flag + " <b>" + team_a.es_name + " " + str(score[0]) + " - "
+			m += team_b.flag + " " + team_b.es_name + " " + str(score[1]) + "</b>"
 		return m
 
 	def build_match_comment(self, l, score, team_a, team_b):
@@ -129,17 +132,18 @@ class FifaWC():
 				m += self.es_comments[n][2]
 		return m
 
-	def build_null_message(l, home, visiting):
+	def build_null_message(self, l, home, visiting):
 		m = ""
 		if l == 1:
-			m = "I think a match between " + home + "and" + visiting + " "
-			m += "is not possible during the Qatar Fifa World Cup. Did you spell the name of the teams correctly? "
+			m = "I think a match between " + home + " and " + visiting + " "
+			m += "is not possible during the Qatar FIFA World Cup. Did you spell the name of the teams correctly? "
 			m += "Please don't waste my time!"
 		else:
-			m = "Creo que un partido entre " + home + "y" + visiting + " "
-			m += "no es posible durante el Mundial de Fútbol organizado por la Fifa en Qatar. "
+			m = "Creo que un partido entre " + home + " y " + visiting + " "
+			m += "no es posible durante el Mundial de Fútbol organizado por la FIFA en Qatar. "
 			m += "¿Escribiste los nombres de los equipos correctamente? "
 			m += "¡No me hagas perder el tiempo!"
+		return m
 
 	#Predicting a match result...
 	def decide_attacks(self, attack, deffense):
@@ -188,7 +192,7 @@ class FifaWC():
 		file = open("assets/fifawc_2022_teams.csv").readlines()[1:]
 		for line in file:
 			data = line.split(";")
-			teams.append(Team(data[0],data[1],data[2],float(data[3])))
+			teams.append(Team(data[0],data[1],data[2],data[3],float(data[4])))
 		return teams
 
 	def look_for_team(self, code):
@@ -211,12 +215,23 @@ class FifaWC():
 		for line in lines:
 			comments.append(line.split(";"))
 		return comments
+	
+	def list_teams(self):
+		m = ""
+		for t in self.teams:
+			m += t.flag + " "
+			m += "{:0.2f}".format(t.strength) + " "
+			m += str(t.results) + " "
+			m += t.code + " "
+			m += t.en_name + "\n"
+		return m
 
 class Team():
 	"The tiny class to represent a football team..."
 
-	def __init__(self, code, en_name, es_name, strength):
+	def __init__(self, code, flag, en_name, es_name, strength):
 		self.code = code
+		self.flag = flag
 		self.en_name = en_name
 		self.es_name = es_name
 		self.strength = strength
