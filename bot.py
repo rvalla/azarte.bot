@@ -236,7 +236,6 @@ def print_help(update, context):
 #Advicing user not to chat with a bot...
 def wrong_message(update, context):
 	id = update.effective_chat.id
-	print(update.message.text)
 	if update.message.reply_to_message == None:
 		context.bot.send_message(chat_id=id, text=msg.get_message("wrong_message", get_language(id)), parse_mode=ParseMode.HTML)
 	else:
