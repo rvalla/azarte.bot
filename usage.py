@@ -41,7 +41,7 @@ class Usage():
 			"language: " + str(self.language) + "\n" + \
 			"help: " + str(self.help) + "\n" + \
 			"wrong_message: " + str(self.wrong_message) + "\n" \
-			"errors: " + str(self.errors)
+			"errors: " + str(self.errors) + "\n"
 		return m
 
 	#Saving usage to file...
