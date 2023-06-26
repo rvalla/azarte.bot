@@ -213,6 +213,19 @@ def random_choice(update, context):
 		context.bot.send_message(chat_id=id, text=msg.get_message("empty", get_language(id)), parse_mode=ParseMode.HTML)
 		us.add_choice(False)
 
+#Shuffling a list from the message..
+def random_shuffle(update, context):
+	in_m = update.message.text.split(" ")
+	id = update.effective_chat.id
+	try:
+		data = mrd.shuffle(in_m[1:])
+		out_m = msg.get_message("shuffle", get_language(id)) + "<b>" + msg.get_list_text(data) + "</b>"
+		context.bot.send_message(chat_id=id, text=out_m, parse_mode=ParseMode.HTML)
+		us.add_shuffle(True)
+	except:
+		context.bot.send_message(chat_id=id, text=msg.get_message("empty", get_language(id)), parse_mode=ParseMode.HTML)
+		us.add_shuffle(False)
+
 #Selecting a word from the message for the user...
 def qatar(update, context):
 	in_m = update.message.text.split(" ")
@@ -441,7 +454,7 @@ def main():
 		logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 	updater = Updater(config["token"], request_kwargs={'read_timeout': 5, 'connect_timeout': 5})
 	dp = updater.dispatcher
-	dp.add_error_handler(error_notification)
+	#dp.add_error_handler(error_notification)
 	dp.add_handler(build_conversation_handler(), group=1)
 	dp.add_handler(MessageHandler(Filters.text & ~Filters.command, wrong_message), group=1)
 	dp.add_handler(CommandHandler("start", start), group=2)
@@ -452,6 +465,7 @@ def main():
 	dp.add_handler(CommandHandler("number", random_number), group=2)
 	dp.add_handler(CommandHandler("sequence", random_sequence), group=2)
 	dp.add_handler(CommandHandler("choice", random_choice), group=2)
+	dp.add_handler(CommandHandler("shuffle", random_shuffle), group=2)
 	dp.add_handler(CommandHandler("qatar", qatar), group=2)
 	dp.add_handler(CommandHandler("language", select_language), group=2)
 	dp.add_handler(CommandHandler("help", print_help), group=2)

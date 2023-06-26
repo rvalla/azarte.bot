@@ -19,6 +19,7 @@ class Usage():
 		self.number = 0
 		self.sequence = 0
 		self.choice = [0,0] #success, empty...
+		self.shuffle = [0,0] #success, empty... 
 		self.qatar = [0,0] #success, error...
 		self.language = [0,0] #spanish, english...
 		self.help = 0
@@ -37,6 +38,7 @@ class Usage():
 			"number: " + str(self.number) + "\n" + \
 			"sequence: " + str(self.sequence) + "\n" + \
 			"choice: " + str(self.choice) + "\n" + \
+			"shuffle: " + str(self.shuffle) + "\n" + \
 			"qatar: " + str(self.qatar) + "\n" + \
 			"language: " + str(self.language) + "\n" + \
 			"help: " + str(self.help) + "\n" + \
@@ -69,6 +71,7 @@ class Usage():
 		line += str(self.number) + ";"
 		line += str(self.sequence) + ";"
 		line += str(self.choice) + ";"
+		line += str(self.shuffle) + ";"
 		line += str(self.qatar) + ";"
 		line += str(self.language) + ";"
 		line += str(self.help) + ";"
@@ -114,6 +117,13 @@ class Usage():
 			self.choice[0] += 1
 		else:
 			self.choice[1] += 1
+
+	#Registering a new choice...
+	def add_shuffle(self, success):
+		if success:
+			self.shuffle[0] += 1
+		else:
+			self.shuffle[1] += 1
 
 	#Registering a new qatar...
 	def add_qatar(self, success):

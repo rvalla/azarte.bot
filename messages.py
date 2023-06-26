@@ -16,6 +16,14 @@ class Messages():
 			return self.msg_en[key]
 		else:
 			return self.msg_es[key]
+	
+	#Returning a formated list...
+	def get_list_text(self, the_list):
+		m = ""
+		for w in the_list:
+			m += w
+			m += ", "
+		return m[:len(m)-2]
 
 	#Returning a random reply...
 	def random_reply(self, l):

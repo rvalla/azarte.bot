@@ -16,10 +16,16 @@ class MyRandom():
 		for r in range(n):
 			l.append(self.diceroll(f))
 		return l
+	
+	#Returning a shuffled list	
+	def shuffle(self, l):
+		return rd.shuffle(l)
 
+	#Simulating a football match
 	def worldcup_match(self, l, home, visiting):
 		return self.wc.match(l, home, visiting)
 	
+	#Checking world cup teams' status
 	def worldcup_test(self):
 		return self.wc.list_teams()
 

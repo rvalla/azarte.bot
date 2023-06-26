@@ -18,6 +18,7 @@
 	"txt_poem": "Here is a <i>random poem</i> for you:",
 	"number": "I rolled a dice and got: ",
 	"choice": "I choose: ",
+	"shuffle": "I shuffled your words list. Here it is: ",
 	"empty": "Nice try. But it is not possible to choose an element from the empty set.",
 	"qatar_error": "I can't do anything with this message. I need you to send the command follow by two football teams separated by a space (that have qualified for the tournament).",
 	"patience": "Be patient! I have to do some calculations...",
