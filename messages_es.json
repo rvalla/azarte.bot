@@ -20,6 +20,7 @@
 	"choice": "Me quedo con: ",
 	"shuffle": "Mezclé tu lista de palabras. Me quedó así: ",
 	"empty": "Buen intento. Pero no es posible elegir un elemento del conjunto vacío.",
+	"empty_2": "Buen intento. Pero no es posible reordenar al azar los elementos del conjunto vacío.",
 	"qatar_error": "No puedo hacer nada con eso. Necesito que me mandes el comando seguido de dos equipos de fútbol separados por un espacio (de los clasificados para el mundial).",
 	"patience": "¡Paciencia! Necesito hacer algunos cálculos...",
 	"error": "Algo salió mal... ¡Qué vergüenza!",

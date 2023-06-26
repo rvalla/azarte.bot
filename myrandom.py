@@ -19,7 +19,8 @@ class MyRandom():
 	
 	#Returning a shuffled list	
 	def shuffle(self, l):
-		return rd.shuffle(l)
+		rd.shuffle(l)
+		return l
 
 	#Simulating a football match
 	def worldcup_match(self, l, home, visiting):
