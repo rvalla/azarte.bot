@@ -100,8 +100,6 @@ class Image():
 			self.draw_rectangle(d, self.invert_color(color), a, b)
 			a = (a[0], b[1] + m)
 			b = (b[0], self.h - m)
-			print(a)
-			print(b)
 			self.draw_rectangle(d, color, a, b)
 			color = self.move_color(color, 5)
 		return self.create_image(i)
