@@ -98,11 +98,14 @@ class Image():
 			a = (m + m * b + w * b, m)
 			b = (a[0] + w, (self.h * data[b] / data_max) + m)
 			self.draw_rectangle(d, self.invert_color(color), a, b)
-			a = (a[0], self.h - m)
-			b = (b[0], b[1] + m)
+			a = (a[0], b[1] + m)
+			b = (b[0], self.h - m)
+			print(a)
+			print(b)
 			self.draw_rectangle(d, color, a, b)
 			color = self.move_color(color, 5)
-		return self.create_image(i)
+		i.show()
+		#return self.create_image(i)
 
 	#Creating a random data list to draw a distribution...
 	def get_distribution(self, steps):

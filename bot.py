@@ -219,11 +219,15 @@ def random_shuffle(update, context):
 	id = update.effective_chat.id
 	try:
 		data = mrd.shuffle(in_m[1:])
-		out_m = msg.get_message("shuffle", get_language(id)) + "<b>" + msg.get_list_text(data) + "</b>"
-		context.bot.send_message(chat_id=id, text=out_m, parse_mode=ParseMode.HTML)
-		us.add_shuffle(True)
+		if len(data) > 0:
+			out_m = msg.get_message("shuffle", get_language(id)) + "<b>" + msg.get_list_text(data) + "</b>"
+			context.bot.send_message(chat_id=id, text=out_m, parse_mode=ParseMode.HTML)
+			us.add_shuffle(True)
+		else:
+			context.bot.send_message(chat_id=id, text=msg.get_message("empty_2", get_language(id)), parse_mode=ParseMode.HTML)
+			us.add_shuffle(False)
 	except:
-		context.bot.send_message(chat_id=id, text=msg.get_message("empty", get_language(id)), parse_mode=ParseMode.HTML)
+		context.bot.send_message(chat_id=id, text=msg.get_message("empty_2", get_language(id)), parse_mode=ParseMode.HTML)
 		us.add_shuffle(False)
 
 #Selecting a word from the message for the user...
