@@ -2,6 +2,11 @@
 
 # azarte: telegram bot changelog
 
+## 2023-06-26: v0.8 beta
+
+Adding new */shuffle* command to reorder lists of words sent by the user. Some errors related
+to new *Pillow* version were solved (*/color > Distribution* was broken).  
+
 ## 2022-11-21: v0.7 beta
 
 Adding new */qatar* command to play with predictions for Fifa World Cup matches.  

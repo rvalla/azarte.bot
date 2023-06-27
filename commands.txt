@@ -7,6 +7,7 @@ genuary - Metete en el mes de tiempo generado artificialmente.
 number - Tiro un dado de cualquier cantidad de caras.
 sequence - Tiro un dado varias veces.
 choice - Elijo una palabra de tu mensaje.
+shuffle - Mezclo una lista de palabras.
 qatar - Predigo un resultado del mundial.
 language - Decidí qué idioma uso.
 help - Puedo intentar ayudarte...
