@@ -2,6 +2,10 @@
 
 # azarte: telegram bot changelog
 
+## 2024-02-05: v0.9
+
+Now using version 20 of **python-telegram-bot**. New **/error** command to report errors.  
+
 ## 2023-06-26: v0.8 beta
 
 Adding new */shuffle* command to reorder lists of words sent by the user. Some errors related

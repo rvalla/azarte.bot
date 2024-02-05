@@ -18,7 +18,7 @@ from myrandom import MyRandom
 
 print("Starting Azarte Bot...", end="\n")
 config = js.load(open("config.json")) #The configuration .json file (token included)
-us = Usage("usage.csv") #The class to save bot's usage data...
+us = Usage("usage.csv", "errors.csv") #The class to save bot's usage data...
 msg = Messages() #The class which knows what to say...
 ass = Assets() #The class to access the different persistent assets...
 txt = Text() #The class which create text alternatives...
@@ -27,7 +27,7 @@ gny = Genuary() #The class to process #genuary related requests...
 ion = Interaction() #The class to make thing from user's messages...
 mrd = MyRandom() #A class with some custom random functions...
 en_users = set() #In this set the bot store ids from users who prefer to speak in English
-WAITING = range(1) #Conversation states...
+WAITING, ERROR_1, ERROR_2 = range(3) #Conversation states...
 requests_counter = [0,0,0] #Counting the number of requests by category (image, sound, text)
 update_cycle = 13 #Number of requests before updating configuration...
 
@@ -152,6 +152,35 @@ async def cancel_interaction(update: Update, context: ContextTypes.DEFAULT_TYPE)
 	id = update.effective_chat.id
 	us.add_interaction(3)
 	await context.bot.send_message(id, text=msg.get_message("end_interaction", get_language(id)), parse_mode=ParseMode.HTML)
+	return ConversationHandler.END
+
+#Starting an error report session...
+async def trigger_error_submit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+	id = update.effective_chat.id
+	logging.info(str(hide_id(id)) + " wants to report an error...")
+	await context.bot.send_message(chat_id=id, text=msg.get_apology(get_language(id)), parse_mode=ParseMode.HTML)
+	await context.bot.send_message(chat_id=id, text=msg.get_message("submit_error_1", get_language(id)), parse_mode=ParseMode.HTML)
+	return ERROR_1
+
+#Saving error related command...
+async def report_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+	id = update.effective_chat.id
+	m = update.message.text
+	context.chat_data["error_command"] = m
+	await context.bot.send_message(chat_id=id, text=msg.get_message("submit_error_2", get_language(id)), parse_mode=ParseMode.HTML)
+	return ERROR_2
+
+#Saving error description...
+async def report_error(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+	id = update.effective_chat.id
+	m = context.chat_data["error_command"]
+	m2 = update.message.text
+	context.chat_data["error_description"] = m2
+	us.add_error_report()
+	us.save_error_report(m, m2, str(hide_id(id)))
+	admin_msg = "Error reported:\n-command: " + m + "\n-description: " + m2
+	await context.bot.send_message(chat_id=config["admin_id"], text=admin_msg, parse_mode=ParseMode.HTML)
+	await context.bot.send_message(chat_id=id, text=msg.get_message("submit_error_3", get_language(id)), parse_mode=ParseMode.HTML)
 	return ConversationHandler.END
 
 #Processing a #genuary request...
@@ -443,13 +472,16 @@ def hide_id(id):
 #Building the conversation handler...
 def build_conversation_handler():
 	handler = ConversationHandler(
-		entry_points=[CommandHandler("interaction", start_interaction)],
+		entry_points=[CommandHandler("interaction", start_interaction), CommandHandler("error", trigger_error_submit)],
 		states={WAITING: [MessageHandler(filters.TEXT & ~filters.COMMAND, text_interaction),
 						MessageHandler(filters.PHOTO, img_interaction),
 						MessageHandler(filters.VOICE, wrong_interaction),
-						MessageHandler(filters.VIDEO, wrong_interaction)]},
-				fallbacks=[MessageHandler(filters.COMMAND, cancel_interaction)],
-				per_chat=True, per_user=False, per_message=False)
+						MessageHandler(filters.VIDEO, wrong_interaction)],
+				ERROR_1: [MessageHandler(filters.TEXT, report_command)],
+				ERROR_2: [MessageHandler(filters.TEXT & ~filters.COMMAND, report_error)],
+		},
+		fallbacks=[MessageHandler(filters.COMMAND, cancel_interaction)],
+		per_chat=True, per_user=False, per_message=False)
 	return handler
 
 #Configuring logging and getting ready to work...

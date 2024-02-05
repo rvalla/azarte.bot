@@ -10,4 +10,5 @@ choice - Elijo una palabra de tu mensaje.
 shuffle - Mezclo una lista de palabras.
 qatar - Predigo un resultado del mundial.
 language - Decidí qué idioma uso.
+error - Reportá un error.
 help - Puedo intentar ayudarte...

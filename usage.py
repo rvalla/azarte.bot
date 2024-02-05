@@ -3,8 +3,9 @@ import datetime as dt
 class Usage():
 	"The class to save usage data..."
 
-	def __init__(self, path):
-		self.output_path = path
+	def __init__(self, output_path, errors_path):
+		self.output_path = output_path
+		self.errors_path = errors_path
 		self.reset()
 
 	#Resseting data variables...
@@ -24,6 +25,7 @@ class Usage():
 		self.language = [0,0] #spanish, english...
 		self.help = 0
 		self.wrong_message = 0
+		self.reports = 0
 		self.errors = 0
 
 	#Building usage information message...
@@ -43,6 +45,7 @@ class Usage():
 			"language: " + str(self.language) + "\n" + \
 			"help: " + str(self.help) + "\n" + \
 			"wrong_message: " + str(self.wrong_message) + "\n" \
+			"error reports: " + str(self.reports) + "\n" + \
 			"errors: " + str(self.errors) + "\n"
 		return m
 
@@ -76,6 +79,7 @@ class Usage():
 		line += str(self.language) + ";"
 		line += str(self.help) + ";"
 		line += str(self.wrong_message) + ";"
+		line += str(self.reports) + ";"
 		line += str(self.errors) + "\n"
 		return line
 
@@ -144,6 +148,31 @@ class Usage():
 	def add_wrong_message(self):
 		self.wrong_message += 1
 
+	#Registering a new wrong_message...
+	def add_error_report(self):
+		self.reports += 1
+	
 	#Registering a new error...
 	def add_error(self):
 		self.errors += 1
+
+	#Saving en error report...
+	def save_error_report(self, command, description, user):
+		file = open(self.errors_path, "a")
+		t = dt.datetime.now()
+		date = str(t.year) + "-" + str(t.month) + "-" + str(t.day)
+		file.write(date)
+		file.write(";")
+		file.write(command)
+		file.write(";")
+		file.write(description)
+		file.write(";")
+		file.write(user + "\n")
+		file.close()
+
+	#Printing Usage()...
+	def __str__(self):
+		return "- Azarte Bot\n" + \
+				"  I am the class in charge of saving some usage data...\n" + \
+				"  gitlab.com/azarte/azarte_botn" + \
+				"  rodrigovalla@protonmail.ch"
