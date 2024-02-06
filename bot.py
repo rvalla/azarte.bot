@@ -158,7 +158,7 @@ async def cancel_interaction(update: Update, context: ContextTypes.DEFAULT_TYPE)
 async def trigger_error_submit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 	id = update.effective_chat.id
 	logging.info(str(hide_id(id)) + " wants to report an error...")
-	await context.bot.send_message(chat_id=id, text=msg.get_apology(get_language(id)), parse_mode=ParseMode.HTML)
+	await context.bot.send_message(chat_id=id, text=msg.random_apology(get_language(id)), parse_mode=ParseMode.HTML)
 	await context.bot.send_message(chat_id=id, text=msg.get_message("submit_error_1", get_language(id)), parse_mode=ParseMode.HTML)
 	return ERROR_1
 

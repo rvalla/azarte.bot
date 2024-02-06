@@ -2,6 +2,10 @@
 
 # azarte: telegram bot changelog
 
+## 2024-02-06: v0.9.0.5
+
+Solving errors with the new **/error** command. New organization of *text assets* files.  
+
 ## 2024-02-05: v0.9
 
 Now using version 20 of **python-telegram-bot**. New **/error** command to report errors.  

@@ -5,10 +5,12 @@ class Messages():
 	"The class the bot use to know what to say..."
 
 	def __init__(self):
-		self.msg_es = js.load(open("messages_es.json"))
-		self.msg_en = js.load(open("messages_en.json"))
-		self.replies_es = open("assets/text/es/respuestasaleatorias.txt").readlines()
-		self.replies_en = open("assets/text/en/randomreplies.txt").readlines()
+		self.msg_es = js.load(open("assets/text/es/messages_es.json"))
+		self.msg_en = js.load(open("assets/text/en/messages_en.json"))
+		self.replies_es = open("assets/text/es/random_replies.txt").readlines()
+		self.replies_en = open("assets/text/en/random_replies.txt").readlines()
+		self.errors_es = open("assets/text/es/random_apologies.txt").readlines()
+		self.errors_en = open("assets/text/en/random_apologies.txt").readlines()
 
 	#Returning a message from the database...
 	def get_message(self, key, l):
@@ -31,6 +33,13 @@ class Messages():
 			return rd.choice(self.replies_en)
 		else:
 			return rd.choice(self.replies_es)
+	
+	#Returning a random apology...
+	def random_apology(self, l):
+		if l == 1:
+			return rd.choice(self.errors_en)
+		else:
+			return rd.choice(self.errors_es)
 
 	#Formating a score message...
 	def build_score_message(self, data, l):

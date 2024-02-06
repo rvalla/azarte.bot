@@ -10,11 +10,11 @@ class Text():
 		self.input_list_en = [f for f in os.listdir(self.input_path + "en/random/") if not f.startswith(".")]
 		self.input_tale_es = open(self.input_path + "es/random/" + rd.choice(self.input_list_es)).readlines()
 		self.input_tale_en = open(self.input_path + "en/random/" + rd.choice(self.input_list_en)).readlines()
-		self.fiction_dict_es = open(self.input_path + "es/diccionario.csv").readlines()
+		self.fiction_dict_es = open(self.input_path + "es/dictionary.csv").readlines()
 		self.fiction_dict_en = open(self.input_path + "en/dictionary.csv").readlines()
-		self.microtales_es = open(self.input_path + "es/microrrelatos.txt").readlines()
+		self.microtales_es = open(self.input_path + "es/microtales.txt").readlines()
 		self.microtales_en = open(self.input_path + "en/microtales.txt").readlines()
-		self.scores_es = open(self.input_path + "es/partituras.csv").readlines()[1:]
+		self.scores_es = open(self.input_path + "es/scores.csv").readlines()[1:]
 		self.scores_en = open(self.input_path + "en/scores.csv").readlines()[1:]
 
 	#Updating sources...
